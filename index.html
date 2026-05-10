@@ -1,0 +1,3605 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mensagem Operacional</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      :root {
+        --bg: #0b1020;
+        --panel: #131a2a;
+        --border: #2a3650;
+        --text: #e5eaf3;
+        --muted: #b8c2d8;
+        --primary: #22c55e;
+        --primary-700: #16a34a;
+        --blue: #38bdf8;
+        --blue-700: #0ea5e9;
+        --danger: #ef4444;
+        --amber: #f59e0b;
+        --amber-700: #d97706;
+        --purple: #a855f7;
+        --purple-700: #9333ea;
+        --pink: #ec4899;
+        --pink-700: #db2777;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: radial-gradient(
+          1000px 600px at 10% 0%,
+          #0f172a 0%,
+          #0b1020 40%,
+          #070b16 100%
+        );
+        color: var(--text);
+      }
+      h1 {
+        margin: 0 0 12px 0;
+        text-align: center;
+        color: var(--blue);
+        letter-spacing: 0.5px;
+      }
+      .subtitle {
+        text-align: center;
+        color: var(--muted);
+        margin-bottom: 24px;
+      }
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 14px;
+      }
+      .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      .field {
+        grid-column: span 12;
+      }
+      @media (min-width: 720px) {
+        .field.half {
+          grid-column: span 6;
+        }
+        .field.third {
+          grid-column: span 4;
+        }
+        .field.two-thirds {
+          grid-column: span 8;
+        }
+        .field.quarter {
+          grid-column: span 3;
+        }
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: var(--muted);
+      }
+      select,
+      input[type="text"],
+      input[type="date"],
+      textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: #0b1220;
+        color: var(--text);
+        outline: none;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+      select:focus,
+      input:focus,
+      textarea:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+      }
+      textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+      .hidden {
+        display: none;
+      }
+      .actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+      button {
+        border: none;
+        cursor: pointer;
+        font-weight: 700;
+        padding: 10px 16px;
+        border-radius: 10px;
+        transition: transform 0.08s ease, background 0.2s ease,
+          opacity 0.2s ease;
+      }
+      button:active {
+        transform: scale(0.98);
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #06121b;
+      }
+      .btn-primary:hover {
+        background: var(--primary-700);
+      }
+      .btn-secondary {
+        background: var(--blue);
+        color: #06121b;
+      }
+      .btn-secondary:hover {
+        background: var(--blue-700);
+      }
+      .btn-amber {
+        background: var(--amber);
+        color: #06121b;
+      }
+      .btn-amber:hover {
+        background: var(--amber-700);
+      }
+      .btn-purple {
+        background: var(--purple);
+        color: #06121b;
+      }
+      .btn-purple:hover {
+        background: var(--purple-700);
+      }
+      .btn-pink {
+        background: var(--pink);
+        color: #06121b;
+      }
+      .btn-pink:hover {
+        background: var(--pink-700);
+      }
+      .btn-outline {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+      .note {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 6px;
+      }
+      .output {
+        white-space: pre-wrap;
+        background: #0a1322;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        min-height: 100px;
+        word-wrap: break-word;
+        word-break: break-word;
+      }
+      .section-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0 0 10px 0;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .help {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .error {
+        color: var(--danger);
+        font-size: 13px;
+        margin-top: 6px;
+      }
+      .pill {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: #0c1627;
+        color: var(--muted);
+        font-size: 12px;
+        margin-right: 6px;
+      }
+      .footer {
+        text-align: center;
+        color: var(--muted);
+        margin-top: 18px;
+        font-size: 12px;
+      }
+      .checkbox-group {
+        display: flex;
+        gap: 16px;
+        margin-top: 8px;
+      }
+      .checkbox-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: normal;
+        cursor: pointer;
+      }
+      .checkbox-label input[type="checkbox"] {
+        width: auto;
+        margin: 0;
+      }
+      .reuse-section {
+        margin-bottom: 16px;
+        padding: 12px;
+        background: rgba(56, 189, 248, 0.1);
+        border-radius: 8px;
+        border: 1px solid var(--blue);
+      }
+      .reuse-section p {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+      }
+      .tab-selector {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 20px;
+        justify-content: center;
+      }
+      .tab-button {
+        padding: 12px 24px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--muted);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-weight: 600;
+      }
+      .tab-button.active {
+        background: var(--blue);
+        color: #06121b;
+        border-color: var(--blue);
+      }
+      .tab-button:hover:not(.active) {
+        background: rgba(56, 189, 248, 0.1);
+        border-color: var(--blue);
+      }
+      .tipo-equipamento {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 12px;
+      }
+      .tipo-equipamento label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: normal;
+        cursor: pointer;
+      }
+      .tipo-equipamento input[type="radio"] {
+        width: auto;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Mensagem Operacional</h1>
+      <div class="subtitle">
+        Padrão mensagem operativa - Desenvolvido por Weverton - COI
+      </div>
+
+      <!-- Seletor de tipo de mensagem -->
+      <div class="tab-selector">
+        <button class="tab-button active" data-tipo="distribuicao">
+          Distribuição
+        </button>
+        <button class="tab-button" data-tipo="transmissao">Transmissão</button>
+      </div>
+
+      <!-- Seção DISTRIBUIÇÃO -->
+      <div id="sec-distribuicao">
+        <!-- Controle principal -->
+        <div class="panel">
+          <div class="grid">
+            <div class="field half">
+              <label>Tipo de informação</label>
+              <select id="tipo">
+                <option value="">Selecione</option>
+                <option value="desarme">Desarme</option>
+                <option value="falta_fase">Falta de Fase</option>
+                <option value="parcial">Normalização Parcial</option>
+                <option value="total">Normalização Total</option>
+                <option value="ra_sucesso">RA C/ SUCESSO</option>
+              </select>
+              <div class="note">
+                Escolha o tipo para exibir os campos específicos.
+              </div>
+            </div>
+            <div class="field half">
+              <label>Visual do texto</label>
+              <select id="visual">
+                <option value="padrao">Padrão</option>
+                <option value="marcadores">Com marcadores</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <span class="pill">Data: selecione no calendário</span>
+            <span class="pill"
+              >Hora: digite números (ex.: 93512 → 09:35:12)</span
+            >
+          </div>
+        </div>
+
+        <!-- Seção DESARME -->
+        <div class="panel hidden" id="sec-desarme">
+          <div class="section-title">NA DISTRIBUIÇÃO</div>
+          <div class="grid">
+            <div class="field third">
+              <label>Tipo de atuação</label>
+              <select id="tipoAtuacaoDesarme">
+                <option value="">Selecione</option>
+                <option value="ACC">ACC</option>
+                <option value="AMC">AMC</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label>Regional</label>
+              <select id="regionalDesarme">
+                <option value="">Selecione</option>
+                <option value="Leste">Leste</option>
+                <option value="Centro">Centro</option>
+                <option value="Oeste">Oeste</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label>Polo</label>
+              <select id="poloDesarme">
+                <option value="">Selecione</option>
+              </select>
+            </div>
+
+            <div class="field third">
+              <label>SED</label>
+              <select id="sedDesarme">
+                <option value="">Selecione</option>
+              </select>
+            </div>
+
+            <!-- Seletor de tipo de equipamento (RL/RD) -->
+            <div class="field two-thirds">
+              <label>Tipo de equipamento</label>
+              <div class="tipo-equipamento">
+                <label>
+                  <input
+                    type="radio"
+                    name="tipoEquipDesarme"
+                    value="RL"
+                    checked
+                  />
+                  RL (Linha - adiciona prefixo 21)
+                </label>
+                <label>
+                  <input type="radio" name="tipoEquipDesarme" value="RD" />
+                  RD (Digitar número + linha)
+                </label>
+              </div>
+
+              <!-- Campo para RL -->
+              <div id="campoRLDesarme">
+                <label for="selectLinhaDesarme">Selecione a linha</label>
+                <select id="selectLinhaDesarme">
+                  <option value="">Selecione a linha</option>
+                </select>
+                <div class="note">
+                  Para RL: o sistema adicionará "21" no início e a SED no final.
+                </div>
+              </div>
+
+              <!-- Campo para RD (inicialmente oculto) -->
+              <div id="campoRDDesarme" class="hidden">
+                <label for="numEquipRDDesarme">Número do equipamento</label>
+                <input
+                  type="text"
+                  id="numEquipRDDesarme"
+                  placeholder="Ex.: 121212"
+                  style="margin-bottom: 8px"
+                />
+                <label for="selectLinhaRDDesarme">Linha</label>
+                <select id="selectLinhaRDDesarme">
+                  <option value="">Selecione a linha</option>
+                </select>
+                <div class="note">
+                  Para RD: formato será [número] no 01[linha]-[SED]
+                </div>
+              </div>
+
+              <!-- Campo oculto que armazenará o valor final -->
+              <input type="text" id="equipDesarme" style="display: none" />
+            </div>
+
+            <div class="field third">
+              <label>Data</label>
+              <input type="date" id="dataDesarme" />
+            </div>
+
+            <div class="field third">
+              <label>Hora de atuação (números)</label>
+              <input type="text" id="horaDesarme" placeholder="Ex.: 93512" />
+            </div>
+            <div class="field third">
+              <label>Clientes afetados</label>
+              <input type="text" id="afetadosDesarme" placeholder="Ex.: 1200" />
+            </div>
+            <div class="field third">
+              <label>Proteção atuada</label>
+              <select id="protecaoDesarme">
+                <option value="">Selecione</option>
+                <option>50</option>
+                <option>51</option>
+                <option>HCL</option>
+                <option>SEF</option>
+              </select>
+            </div>
+
+            <div class="field third">
+              <label>Nível CC (número)</label>
+              <input type="text" id="nivelCCDesarme" placeholder="Ex.: 120" />
+              <div class="help">Saída será com sufixo "A" (ex.: 120 A).</div>
+            </div>
+            <div class="field third">
+              <label>Fase(s) da proteção atuada</label>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseA" value="A" />
+                  A
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseB" value="B" />
+                  B
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseC" value="C" />
+                  C
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseN" value="N" />
+                  N
+                </label>
+              </div>
+              <div class="note">Selecione uma ou mais fases</div>
+            </div>
+            <div class="field third">
+              <label>Possui Self Healing?</label>
+              <select id="selfHealingDesarme">
+                <option value="">Selecione</option>
+                <option>SIM</option>
+                <option>NÃO</option>
+              </select>
+            </div>
+
+            <div class="field third" id="campoAtuouCorretamenteDesarme">
+              <label>Atuou corretamente?</label>
+              <select id="corretoDesarme">
+                <option value="">Selecione</option>
+                <option>SIM</option>
+                <option>NÃO</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>OBS</label>
+              <textarea
+                id="obsDesarme"
+                placeholder="Observações técnicas do evento"
+              ></textarea>
+            </div>
+          </div>
+          <div id="errDesarme" class="error hidden"></div>
+        </div>
+
+        <!-- Seção FALTA DE FASE -->
+        <div class="panel hidden" id="sec-falta_fase">
+          <div class="section-title">FALTA DE FASE NA DISTRIBUIÇÃO</div>
+          <div class="grid">
+            <div class="field third">
+              <label>Tipo de atuação</label>
+              <select id="tipoAtuacaoFaltaFase">
+                <option value="">Selecione</option>
+                <option value="ACC">FALTA DE FASE</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label>Regional</label>
+              <select id="regionalFaltaFase">
+                <option value="">Selecione</option>
+                <option value="Leste">Leste</option>
+                <option value="Centro">Centro</option>
+                <option value="Oeste">Oeste</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label>Polo</label>
+              <select id="poloFaltaFase">
+                <option value="">Selecione</option>
+              </select>
+            </div>
+
+            <div class="field third">
+              <label>SED</label>
+              <select id="sedFaltaFase">
+                <option value="">Selecione</option>
+              </select>
+            </div>
+
+            <!-- Seletor de tipo de equipamento (RL/RD) -->
+            <div class="field two-thirds">
+              <label>Tipo de equipamento</label>
+              <div class="tipo-equipamento">
+                <label>
+                  <input
+                    type="radio"
+                    name="tipoEquipFaltaFase"
+                    value="RL"
+                    checked
+                  />
+                  RL (Linha - adiciona prefixo 21)
+                </label>
+                <label>
+                  <input type="radio" name="tipoEquipFaltaFase" value="RD" />
+                  RD (Digitar número + linha)
+                </label>
+              </div>
+
+              <!-- Campo para RL -->
+              <div id="campoRLFaltaFase">
+                <label for="selectLinhaFaltaFase">Selecione a linha</label>
+                <select id="selectLinhaFaltaFase">
+                  <option value="">Selecione a linha</option>
+                </select>
+                <div class="note">
+                  Para RL: o sistema adicionará "21" no início e a SED no final.
+                </div>
+              </div>
+
+              <!-- Campo para RD (inicialmente oculto) -->
+              <div id="campoRDFaltaFase" class="hidden">
+                <label for="numEquipRDFaltaFase">Número do equipamento</label>
+                <input
+                  type="text"
+                  id="numEquipRDFaltaFase"
+                  placeholder="Ex.: 121212"
+                  style="margin-bottom: 8px"
+                />
+                <label for="selectLinhaRDFaltaFase">Linha</label>
+                <select id="selectLinhaRDFaltaFase">
+                  <option value="">Selecione a linha</option>
+                </select>
+                <div class="note">
+                  Para RD: formato será [número] no 01[linha]-[SED]
+                </div>
+              </div>
+
+              <!-- Campo oculto que armazenará o valor final -->
+              <input type="text" id="equipFaltaFase" style="display: none" />
+            </div>
+
+            <div class="field third">
+              <label>Data</label>
+              <input type="date" id="dataFaltaFase" />
+            </div>
+
+            <div class="field third">
+              <label>Hora FALTA DE FASE (números)</label>
+              <input type="text" id="horaFaltaFase" placeholder="Ex.: 93512" />
+            </div>
+            <div class="field third">
+              <label>POSSIVEIS CLIENTES AFETADOS</label>
+              <input
+                type="text"
+                id="afetadosFaltaFase"
+                placeholder="Ex.: 1200"
+              />
+            </div>
+            <div class="field third">
+              <label>FASE(S) AFETADAS</label>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseAFaltaFase" value="A" />
+                  A
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseBFaltaFase" value="B" />
+                  B
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseCFaltaFase" value="C" />
+                  C
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseNFaltaFase" value="N" />
+                  N
+                </label>
+              </div>
+              <div class="note">Selecione uma ou mais fases</div>
+            </div>
+
+            <div class="field">
+              <label>OBS</label>
+              <textarea
+                id="obsFaltaFase"
+                placeholder="Observações técnicas do evento"
+              ></textarea>
+            </div>
+          </div>
+          <div id="errFaltaFase" class="error hidden"></div>
+        </div>
+
+        <!-- Seção NORMALIZAÇÃO PARCIAL -->
+        <div class="panel hidden" id="sec-parcial">
+          <div class="section-title">Normalização parcial</div>
+
+          <div class="reuse-section" id="reuse-parcial">
+            <p>Reutilizar dados do último desarme:</p>
+            <button
+              class="btn-amber"
+              data-action="usarDesarme"
+              data-tipo="parcial"
+            >
+              Usar dados do último desarme
+            </button>
+            <div class="note">
+              Preenche automaticamente: Regional, Polo e SED
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="field third">
+              <label>Regional</label>
+              <select id="regionalParcial">
+                <option value="">Selecione</option>
+                <option value="Leste">Leste</option>
+                <option value="Centro">Centro</option>
+                <option value="Oeste">Oeste</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label>Polo</label>
+              <select id="poloParcial">
+                <option value="">Selecione</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label>SED</label>
+              <select id="sedParcial">
+                <option value="">Selecione</option>
+              </select>
+            </div>
+
+            <!-- Seletor de tipo de equipamento (RL/RD) -->
+            <div class="field two-thirds">
+              <label>Tipo de equipamento</label>
+              <div class="tipo-equipamento">
+                <label>
+                  <input
+                    type="radio"
+                    name="tipoEquipParcial"
+                    value="RL"
+                    checked
+                  />
+                  RL (Linha - adiciona prefixo 21)
+                </label>
+                <label>
+                  <input type="radio" name="tipoEquipParcial" value="RD" />
+                  RD (Digitar número + linha)
+                </label>
+              </div>
+
+              <!-- Campo para RL -->
+              <div id="campoRLParcial">
+                <label for="selectLinhaParcial">Selecione a linha</label>
+                <select id="selectLinhaParcial">
+                  <option value="">Selecione a linha</option>
+                </select>
+                <div class="note">
+                  Para RL: o sistema adicionará "21" no início e a SED no final.
+                </div>
+              </div>
+
+              <!-- Campo para RD (inicialmente oculto) -->
+              <div id="campoRDParcial" class="hidden">
+                <label for="numEquipRDParcial">Número do equipamento</label>
+                <input
+                  type="text"
+                  id="numEquipRDParcial"
+                  placeholder="Ex.: 121212"
+                  style="margin-bottom: 8px"
+                />
+                <label for="selectLinhaRDParcial">Linha</label>
+                <select id="selectLinhaRDParcial">
+                  <option value="">Selecione a linha</option>
+                </select>
+                <div class="note">
+                  Para RD: formato será [número] no 01[linha]-[SED]
+                </div>
+              </div>
+
+              <!-- Campo oculto que armazenará o valor final -->
+              <input type="text" id="equipParcial" style="display: none" />
+            </div>
+
+            <div class="field third">
+              <label>Data</label>
+              <input type="date" id="dataParcial" />
+            </div>
+            <div class="field third">
+              <label>Hora de normalização (números)</label>
+              <input type="text" id="horaParcial" placeholder="Ex.: 93512" />
+            </div>
+
+            <div class="field half">
+              <label>Clientes normalizados</label>
+              <input type="text" id="normParcial" placeholder="Ex.: 800" />
+            </div>
+            <div class="field half">
+              <label>Clientes ainda desenergizados</label>
+              <input type="text" id="desenParcial" placeholder="Ex.: 400" />
+            </div>
+
+            <div class="field">
+              <label>OBS</label>
+              <textarea
+                id="obsParcial"
+                placeholder="Observações técnicas do evento"
+              ></textarea>
+            </div>
+          </div>
+          <div id="errParcial" class="error hidden"></div>
+        </div>
+
+        <!-- Seção NORMALIZAÇÃO TOTAL -->
+        <div class="panel hidden" id="sec-total">
+          <div class="section-title">Normalização total</div>
+
+          <div class="reuse-section" id="reuse-total">
+            <p>Reutilizar dados do último desarme:</p>
+            <button
+              class="btn-amber"
+              data-action="usarDesarme"
+              data-tipo="total"
+            >
+              Usar dados do último desarme
+            </button>
+            <div class="note">
+              Preenche automaticamente: Regional, Polo e SED
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="field third">
+              <label>Regional</label>
+              <select id="regionalTotal">
+                <option value="">Selecione</option>
+                <option value="Leste">Leste</option>
+                <option value="Centro">Centro</option>
+                <option value="Oeste">Oeste</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label>Polo</label>
+              <select id="poloTotal">
+                <option value="">Selecione</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label>SED</label>
+              <select id="sedTotal">
+                <option value="">Selecione</option>
+              </select>
+            </div>
+
+            <!-- Seletor de tipo de equipamento (RL/RD) -->
+            <div class="field two-thirds">
+              <label>Tipo de equipamento</label>
+              <div class="tipo-equipamento">
+                <label>
+                  <input
+                    type="radio"
+                    name="tipoEquipTotal"
+                    value="RL"
+                    checked
+                  />
+                  RL (Linha - adiciona prefixo 21)
+                </label>
+                <label>
+                  <input type="radio" name="tipoEquipTotal" value="RD" />
+                  RD (Digitar número + linha)
+                </label>
+              </div>
+
+              <!-- Campo para RL -->
+              <div id="campoRLTotal">
+                <label for="selectLinhaTotal">Selecione a linha</label>
+                <select id="selectLinhaTotal">
+                  <option value="">Selecione a linha</option>
+                </select>
+                <div class="note">
+                  Para RL: o sistema adicionará "21" no início e a SED no final.
+                </div>
+              </div>
+
+              <!-- Campo para RD (inicialmente oculto) -->
+              <div id="campoRDTotal" class="hidden">
+                <label for="numEquipRDTotal">Número do equipamento</label>
+                <input
+                  type="text"
+                  id="numEquipRDTotal"
+                  placeholder="Ex.: 121212"
+                  style="margin-bottom: 8px"
+                />
+                <label for="selectLinhaRDTotal">Linha</label>
+                <select id="selectLinhaRDTotal">
+                  <option value="">Selecione a linha</option>
+                </select>
+                <div class="note">
+                  Para RD: formato será [número] no 01[linha]-[SED]
+                </div>
+              </div>
+
+              <!-- Campo oculto que armazenará o valor final -->
+              <input type="text" id="equipTotal" style="display: none" />
+            </div>
+
+            <div class="field third">
+              <label>Data</label>
+              <input type="date" id="dataTotal" />
+            </div>
+            <div class="field third">
+              <label>Horário de normalização (números)</label>
+              <input type="text" id="horaTotal" placeholder="Ex.: 93512" />
+            </div>
+
+            <div class="field half">
+              <label>Clientes restabelecidos</label>
+              <input type="text" id="restTotal" placeholder="Ex.: 1200" />
+            </div>
+            <div class="field half">
+              <label>Causa</label>
+              <input
+                type="text"
+                id="causaTotal"
+                placeholder="Ex.: Falha de equipamento, vegetação, etc."
+              />
+            </div>
+
+            <!-- NOVO CAMPO: ID do defeito -->
+            <div class="field half">
+              <label>ID do defeito</label>
+              <input
+                type="text"
+                id="idDefeitoTotal"
+                placeholder="Ex.: 123456"
+              />
+              <div class="note">Opcional</div>
+            </div>
+
+            <div class="field">
+              <label>OBS</label>
+              <textarea
+                id="obsTotal"
+                placeholder="Observações técnicas do evento"
+              ></textarea>
+            </div>
+          </div>
+          <div id="errTotal" class="error hidden"></div>
+        </div>
+
+        <!-- Seção RA C/ SUCESSO -->
+        <div class="panel hidden" id="sec-ra_sucesso">
+          <div class="section-title">INFORMATIVO RA C/ SUCESSO</div>
+          <div class="grid">
+            <div class="field third">
+              <label>Regional</label>
+              <select id="regionalRaSucesso">
+                <option value="">Selecione</option>
+                <option value="Leste">Leste</option>
+                <option value="Centro">Centro</option>
+                <option value="Oeste">Oeste</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label>Polo</label>
+              <select id="poloRaSucesso">
+                <option value="">Selecione</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label>SED</label>
+              <select id="sedRaSucesso">
+                <option value="">Selecione</option>
+              </select>
+            </div>
+
+            <!-- Seletor de tipo de equipamento (RL/RD) -->
+            <div class="field two-thirds">
+              <label>Tipo de equipamento</label>
+              <div class="tipo-equipamento">
+                <label>
+                  <input
+                    type="radio"
+                    name="tipoEquipRaSucesso"
+                    value="RL"
+                    checked
+                  />
+                  RL (Linha - adiciona prefixo 21)
+                </label>
+                <label>
+                  <input type="radio" name="tipoEquipRaSucesso" value="RD" />
+                  RD (Digitar número + linha)
+                </label>
+              </div>
+
+              <!-- Campo para RL -->
+              <div id="campoRLRaSucesso">
+                <label for="selectLinhaRaSucesso">Selecione a linha</label>
+                <select id="selectLinhaRaSucesso">
+                  <option value="">Selecione a linha</option>
+                </select>
+                <div class="note">
+                  Para RL: o sistema adicionará "21" no início e a SED no final.
+                </div>
+              </div>
+
+              <!-- Campo para RD (inicialmente oculto) -->
+              <div id="campoRDRaSucesso" class="hidden">
+                <label for="numEquipRDRaSucesso">Número do equipamento</label>
+                <input
+                  type="text"
+                  id="numEquipRDRaSucesso"
+                  placeholder="Ex.: 121212"
+                  style="margin-bottom: 8px"
+                />
+                <label for="selectLinhaRDRaSucesso">Linha</label>
+                <select id="selectLinhaRDRaSucesso">
+                  <option value="">Selecione a linha</option>
+                </select>
+                <div class="note">
+                  Para RD: formato será [número] no 01[linha]-[SED]
+                </div>
+              </div>
+
+              <!-- Campo oculto que armazenará o valor final -->
+              <input type="text" id="equipRaSucesso" style="display: none" />
+            </div>
+
+            <div class="field third">
+              <label>Data</label>
+              <input type="date" id="dataRaSucesso" />
+            </div>
+
+            <div class="field third">
+              <label>Hora de atuação (números)</label>
+              <input type="text" id="horaRaSucesso" placeholder="Ex.: 93512" />
+            </div>
+
+            <div class="field third">
+              <label>Proteção atuada</label>
+              <select id="protecaoRaSucesso">
+                <option value="">Selecione</option>
+                <option>50</option>
+                <option>51</option>
+                <option>HCL</option>
+                <option>SEF</option>
+              </select>
+            </div>
+
+            <div class="field third">
+              <label>Nível CC (número)</label>
+              <input type="text" id="nivelCCRaSucesso" placeholder="Ex.: 120" />
+              <div class="help">Saída será com sufixo "A" (ex.: 120 A).</div>
+            </div>
+
+            <div class="field third">
+              <label>Fase(s) da proteção atuada</label>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseARaSucesso" value="A" />
+                  A
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseBRaSucesso" value="B" />
+                  B
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseCRaSucesso" value="C" />
+                  C
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseNRaSucesso" value="N" />
+                  N
+                </label>
+              </div>
+              <div class="note">Selecione uma ou mais fases</div>
+            </div>
+
+            <div class="field half">
+              <label>Comp. referência NIX</label>
+              <input type="text" id="compNIXRaSucesso" placeholder="Ex.: 000" />
+            </div>
+
+            <div class="field half">
+              <label>Ações tomadas</label>
+              <textarea
+                id="acaoRaSucesso"
+                placeholder="Ex.: Acionado equipe XXXX ou acionado Supervisão XXXX"
+              ></textarea>
+            </div>
+          </div>
+          <div id="errRaSucesso" class="error hidden"></div>
+        </div>
+      </div>
+
+      <!-- Seção TRANSMISSÃO (mantida igual) -->
+      <div id="sec-transmissao" class="hidden">
+        <!-- Controle principal para Transmissão -->
+        <div class="panel">
+          <div class="grid">
+            <div class="field half">
+              <label>Tipo de informação</label>
+              <select id="tipoTransmissao">
+                <option value="">Selecione</option>
+                <option value="desarme">Desarme na Transmissão</option>
+                <option value="desarme_linha">Desarme de Linha</option>
+                <option value="religamento">
+                  Religamento Automático com Sucesso
+                </option>
+                <option value="energizacao_total">Energização Total</option>
+                <option value="vtcd">VTCD</option>
+              </select>
+              <div class="note">
+                Escolha o tipo para exibir os campos específicos.
+              </div>
+            </div>
+            <div class="field half">
+              <label>Visual do texto</label>
+              <select id="visualTransmissao">
+                <option value="padrao">Padrão</option>
+                <option value="marcadores">Com marcadores</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <span class="pill">Data: selecione no calendário</span>
+            <span class="pill"
+              >Hora: digite números (ex.: 93512 → 09:35:12)</span
+            >
+          </div>
+        </div>
+
+        <!-- Seção DESARME NA TRANSMISSÃO -->
+        <div class="panel hidden" id="sec-desarme-transmissao">
+          <div class="section-title">DESARME NA TRANSMISSÃO</div>
+          <div class="grid">
+            <div class="field half">
+              <label>Regional</label>
+              <select id="regionalDesarmeTransmissao">
+                <option value="">Selecione</option>
+                <option value="Leste">Leste</option>
+                <option value="Centro">Centro</option>
+                <option value="Oeste">Oeste</option>
+              </select>
+            </div>
+            <div class="field half">
+              <label>SED</label>
+              <input
+                type="text"
+                id="sedDesarmeTransmissao"
+                placeholder="Digite a SED"
+              />
+            </div>
+
+            <div class="field third">
+              <label>Disjuntor</label>
+              <input
+                type="text"
+                id="disjuntorDesarmeTransmissao"
+                placeholder="Ex.: 12B1-PTS"
+              />
+            </div>
+            <div class="field third">
+              <label>Tipo de atuação</label>
+              <select id="tipoAtuacaoDesarmeTransmissao">
+                <option value="">Selecione</option>
+                <option value="ACC">ACC</option>
+                <option value="AMC">AMC</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label>Data</label>
+              <input type="date" id="dataDesarmeTransmissao" />
+            </div>
+
+            <div class="field third">
+              <label>Hora de atuação (números)</label>
+              <input
+                type="text"
+                id="horaDesarmeTransmissao"
+                placeholder="Ex.: 93512"
+              />
+            </div>
+            <div class="field third">
+              <label>Clientes afetados</label>
+              <input
+                type="text"
+                id="afetadosDesarmeTransmissao"
+                placeholder="Ex.: 5549"
+              />
+            </div>
+            <div class="field third">
+              <label>Proteção atuada</label>
+              <select id="protecaoDesarmeTransmissao">
+                <option value="">Selecione</option>
+                <option>21</option>
+                <option>27</option>
+                <option>50</option>
+                <option>51</option>
+                <option>59</option>
+                <option>63</option>
+                <option>67</option>
+                <option>79</option>
+                <option>81</option>
+                <option>87</option>
+              </select>
+            </div>
+
+            <div class="field third">
+              <label>Nível CC (número)</label>
+              <input
+                type="text"
+                id="nivelCCDesarmeTransmissao"
+                placeholder="Ex.: 5000"
+              />
+              <div class="help">Saída será com sufixo "A" (ex.: 5000 A).</div>
+            </div>
+            <div class="field third">
+              <label>Fase(s) da proteção atuada</label>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseATransmissao" value="A" />
+                  A
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseBTransmissao" value="B" />
+                  B
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseCTransmissao" value="C" />
+                  C
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseNTransmissao" value="N" />
+                  N
+                </label>
+              </div>
+              <div class="note">Selecione uma ou mais fases</div>
+            </div>
+            <div class="field third">
+              <label>KM</label>
+              <input
+                type="text"
+                id="kmDesarmeTransmissao"
+                placeholder="Ex.: 11"
+              />
+            </div>
+
+            <div class="field">
+              <label>OBS</label>
+              <textarea
+                id="obsDesarmeTransmissao"
+                placeholder="Observaões técnicas do evento"
+              ></textarea>
+            </div>
+          </div>
+          <div id="errDesarmeTransmissao" class="error hidden"></div>
+        </div>
+
+        <!-- Seção DESARME DE LINHA -->
+        <div class="panel hidden" id="sec-desarme-linha">
+          <div class="section-title">PARA DESARME DE LINHA</div>
+          <div class="grid">
+            <div class="field half">
+              <label>Regional</label>
+              <select id="regionalDesarmeLinha">
+                <option value="">Selecione</option>
+                <option value="Leste">Leste</option>
+                <option value="Centro">Centro</option>
+                <option value="Oeste">Oeste</option>
+              </select>
+            </div>
+            <div class="field half">
+              <label>SED</label>
+              <input
+                type="text"
+                id="sedDesarmeLinha"
+                placeholder="Digite a SED"
+              />
+            </div>
+
+            <div class="field">
+              <label>Linha de Transmissão</label>
+              <input
+                type="text"
+                id="linhaDesarmeLinha"
+                placeholder="Ex.: 02J6 COREMAS/PIANCÓ (CMA/PCO)"
+              />
+            </div>
+
+            <div class="field third">
+              <label>Disjuntor</label>
+              <input
+                type="text"
+                id="disjuntorDesarmeLinha"
+                placeholder="Ex.: 12J6-CMA"
+              />
+            </div>
+            <div class="field third">
+              <label>Tipo de atuação</label>
+              <select id="tipoAtuacaoDesarmeLinha">
+                <option value="">Selecione</option>
+                <option value="ACC">ACC</option>
+                <option value="AMC">AMC</option>
+              </select>
+            </div>
+            <div class="field third">
+              <label>Data</label>
+              <input type="date" id="dataDesarmeLinha" />
+            </div>
+
+            <div class="field third">
+              <label>Hora de atuação (números)</label>
+              <input
+                type="text"
+                id="horaDesarmeLinha"
+                placeholder="Ex.: 93512"
+              />
+            </div>
+            <div class="field third">
+              <label>Clientes afetados</label>
+              <input
+                type="text"
+                id="afetadosDesarmeLinha"
+                placeholder="Ex.: 5432"
+              />
+            </div>
+            <div class="field third">
+              <label>Proteção atuada</label>
+              <select id="protecaoDesarmeLinha">
+                <option value="">Selecione</option>
+                <option>21</option>
+                <option>27</option>
+                <option>50</option>
+                <option>51</option>
+                <option>59</option>
+                <option>63</option>
+                <option>67</option>
+                <option>79</option>
+                <option>81</option>
+                <option>87</option>
+              </select>
+            </div>
+
+            <div class="field third">
+              <label>Nível CC (número)</label>
+              <input
+                type="text"
+                id="nivelCCDesarmeLinha"
+                placeholder="Ex.: 5000"
+              />
+              <div class="help">Saída será com sufixo "A" (ex.: 5000 A).</div>
+            </div>
+            <div class="field third">
+              <label>Fase(s) da proteção atuada</label>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseADesarmeLinha" value="A" />
+                  A
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseBDesarmeLinha" value="B" />
+                  B
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseCDesarmeLinha" value="C" />
+                  C
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseNDesarmeLinha" value="N" />
+                  N
+                </label>
+              </div>
+              <div class="note">Selecione uma ou mais fases</div>
+            </div>
+            <div class="field third">
+              <label>KM</label>
+              <input type="text" id="kmDesarmeLinha" placeholder="Ex.: 11" />
+            </div>
+
+            <div class="field">
+              <label>OBS</label>
+              <textarea
+                id="obsDesarmeLinha"
+                placeholder="Observações técnicas do evento"
+              ></textarea>
+            </div>
+          </div>
+          <div id="errDesarmeLinha" class="error hidden"></div>
+        </div>
+
+        <!-- Seção RELIGAMENTO AUTOMÁTICO COM SUCESSO -->
+        <div class="panel hidden" id="sec-religamento">
+          <div class="section-title">RELIGAMENTO AUTOMÁTICO COM SUCESSO</div>
+          <div class="grid">
+            <div class="field half">
+              <label>Regional</label>
+              <select id="regionalReligamento">
+                <option value="">Selecione</option>
+                <option value="Leste">Leste</option>
+                <option value="Centro">Centro</option>
+                <option value="Oeste">Oeste</option>
+              </select>
+            </div>
+            <div class="field half">
+              <label>SED</label>
+              <input
+                type="text"
+                id="sedReligamento"
+                placeholder="Digite a SED"
+              />
+            </div>
+
+            <div class="field">
+              <label>Linha de Transmissão</label>
+              <input
+                type="text"
+                id="linhaReligamento"
+                placeholder="Ex.: 02J6 COREMAS/PIANCÓ (CMA/PCO)"
+              />
+            </div>
+
+            <div class="field third">
+              <label>Disjuntor</label>
+              <input
+                type="text"
+                id="disjuntorReligamento"
+                placeholder="Ex.: 12J6-CMA"
+              />
+            </div>
+            <div class="field third">
+              <label>Tipo de atuação</label>
+              <input
+                type="text"
+                id="tipoAtuacaoReligamento"
+                value="RELIGAMENTO C/ SUCESSO"
+                readonly
+              />
+            </div>
+            <div class="field third">
+              <label>Data</label>
+              <input type="date" id="dataReligamento" />
+            </div>
+
+            <div class="field third">
+              <label>Hora de atuação (números)</label>
+              <input
+                type="text"
+                id="horaReligamento"
+                placeholder="Ex.: 93512"
+              />
+            </div>
+            <div class="field third">
+              <label>Clientes afetados</label>
+              <input
+                type="text"
+                id="afetadosReligamento"
+                value="NENHUM"
+                readonly
+              />
+            </div>
+            <div class="field third">
+              <label>Proteção atuada</label>
+              <select id="protecaoReligamento">
+                <option value="">Selecione</option>
+                <option>21</option>
+                <option>27</option>
+                <option>50</option>
+                <option>51</option>
+                <option>59</option>
+                <option>63</option>
+                <option>67</option>
+                <option>79</option>
+                <option>81</option>
+                <option>87</option>
+              </select>
+            </div>
+
+            <div class="field third">
+              <label>Nível CC (número)</label>
+              <input
+                type="text"
+                id="nivelCCReligamento"
+                placeholder="Ex.: 5000"
+              />
+              <div class="help">Saída será com sufixo "A" (ex.: 5000 A).</div>
+            </div>
+            <div class="field third">
+              <label>Fase(s) da proteção atuada</label>
+              <div class="checkbox-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseAReligamento" value="A" />
+                  A
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseBReligamento" value="B" />
+                  B
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseCReligamento" value="C" />
+                  C
+                </label>
+                <label class="checkbox-label">
+                  <input type="checkbox" id="faseNReligamento" value="N" />
+                  N
+                </label>
+              </div>
+              <div class="note">Selecione uma ou mais fases</div>
+            </div>
+            <div class="field third">
+              <label>KM</label>
+              <input type="text" id="kmReligamento" placeholder="Ex.: 12" />
+            </div>
+
+            <div class="field">
+              <label>OBS</label>
+              <textarea
+                id="obsReligamento"
+                placeholder="Observações técnicas do evento"
+              ></textarea>
+            </div>
+          </div>
+          <div id="errReligamento" class="error hidden"></div>
+        </div>
+
+        <!-- Seção ENERGIZAÇÃO TOTAL -->
+        <div class="panel hidden" id="sec-energizacao-total">
+          <div class="section-title">ENERGIZAÇÃO TOTAL</div>
+          <div class="grid">
+            <div class="field half">
+              <label>Regional</label>
+              <select id="regionalEnergizacaoTotal">
+                <option value="">Selecione</option>
+                <option value="Leste">Leste</option>
+                <option value="Centro">Centro</option>
+                <option value="Oeste">Oeste</option>
+              </select>
+            </div>
+            <div class="field half">
+              <label>SED</label>
+              <input
+                type="text"
+                id="sedEnergizacaoTotal"
+                placeholder="Digite a SED"
+              />
+            </div>
+
+            <div class="field">
+              <label>Linha de Transmissão</label>
+              <input
+                type="text"
+                id="linhaEnergizacaoTotal"
+                placeholder="Ex.: 02J6 COREMAS/PIANCÓ (CMA/PCO)"
+              />
+            </div>
+
+            <div class="field third">
+              <label>Disjuntor</label>
+              <input
+                type="text"
+                id="disjuntorEnergizacaoTotal"
+                placeholder="Ex.: 12J6-CMA"
+              />
+            </div>
+            <div class="field third">
+              <label>Tipo de ocorrência</label>
+              <input
+                type="text"
+                id="tipoOcorrenciaEnergizacaoTotal"
+                value="ENERGIZAÇÃO TOTAL"
+                readonly
+              />
+            </div>
+            <div class="field third">
+              <label>Data</label>
+              <input type="date" id="dataEnergizacaoTotal" />
+            </div>
+
+            <div class="field third">
+              <label>Horário de normalização (números)</label>
+              <input
+                type="text"
+                id="horaEnergizacaoTotal"
+                placeholder="Ex.: 93512"
+              />
+            </div>
+            <div class="field third">
+              <label>Clientes restabelecidos</label>
+              <input
+                type="text"
+                id="restabelecidosEnergizacaoTotal"
+                placeholder="Ex.: 2166"
+              />
+            </div>
+            <div class="field third">
+              <label>Causa</label>
+              <input
+                type="text"
+                id="causaEnergizacaoTotal"
+                placeholder="Ex.: Isolador da chave 31L5-6 danificado"
+              />
+            </div>
+
+            <div class="field">
+              <label>OBS</label>
+              <textarea
+                id="obsEnergizacaoTotal"
+                placeholder="Observações técnicas do evento"
+              ></textarea>
+            </div>
+          </div>
+          <div id="errEnergizacaoTotal" class="error hidden"></div>
+        </div>
+
+        <!-- Seção VTCD -->
+        <div class="panel hidden" id="sec-vtcd">
+          <div class="section-title">VTCD</div>
+          <div class="grid">
+            <div class="field half">
+              <label>Regional</label>
+              <select id="regionalVTCD">
+                <option value="">Selecione</option>
+                <option value="Leste">Leste</option>
+                <option value="Centro">Centro</option>
+                <option value="Oeste">Oeste</option>
+              </select>
+            </div>
+            <div class="field half">
+              <label>SED</label>
+              <input type="text" id="sedVTCD" placeholder="Digite a SED" />
+            </div>
+
+            <div class="field third">
+              <label>Linha</label>
+              <input
+                type="text"
+                id="linhaVTCD"
+                placeholder="Ex.: 04F9 LT PAU FERRO/SANTA RITA II"
+              />
+            </div>
+            <div class="field third">
+              <label>Tipo de atuação</label>
+              <input type="text" id="tipoAtuacaoVTCD" value="VTCD" readonly />
+            </div>
+            <div class="field third">
+              <label>Data</label>
+              <input type="date" id="dataVTCD" />
+            </div>
+
+            <div class="field third">
+              <label>Hora (números)</label>
+              <input type="text" id="horaVTCD" placeholder="Ex.: 93512" />
+            </div>
+
+            <div class="field">
+              <label>OBS</label>
+              <textarea
+                id="obsVTCD"
+                placeholder="Ex.: A supridora não informou os valores da variação, pertencente a supridora CHESf"
+              ></textarea>
+            </div>
+          </div>
+          <div id="errVTCD" class="error hidden"></div>
+        </div>
+      </div>
+
+      <!-- Ações e saída -->
+      <div class="panel">
+        <div class="actions">
+          <button class="btn-primary" data-action="gerar">Gerar texto</button>
+          <button class="btn-secondary" data-action="copiar">Copiar</button>
+          <button class="btn-pink" data-action="compartilhar">
+            Compartilhar
+          </button>
+          <button class="btn-outline" data-action="limpar">Limpar</button>
+        </div>
+        <div class="note">
+          O texto abaixo é gerado com base nos campos visíveis do tipo
+          selecionado.
+        </div>
+        <div id="saida" class="output"></div>
+      </div>
+
+      <div class="footer">
+        Feito para agilizar sua comunicação — formatação automática e validação
+        leve.
+      </div>
+    </div>
+
+    <script>
+      // Hierarquia de polos e SEDs com nomes completos (apenas para distribuição)
+      const hierarquia = {
+        Leste: {
+          CAA: [
+            { sigla: "CAA", nome: "CAAPORÃ" },
+            { sigla: "ITA", nome: "ITABAIANA" },
+            { sigla: "MRO", nome: "MATA REDONDA" },
+            { sigla: "ORT", nome: "ORATÓRIO" },
+          ],
+          "JPA-C": [
+            { sigla: "CPX", nome: "CRUZ DO PEIXE" },
+            { sigla: "JPS", nome: "JOAO PESSOA" },
+            { sigla: "ILB", nome: "ILHA DO BISPO" },
+          ],
+          "JPA-L": [
+            { sigla: "TBU", nome: "TAMBAU" },
+            { sigla: "BSA", nome: "BESSA" },
+            { sigla: "CBD", nome: "CABEDELO" },
+          ],
+          "JPA-O": [
+            { sigla: "CRI", nome: "CRISTO" },
+            { sigla: "MRU", nome: "MUSSURÉ" },
+            { sigla: "DST", nome: "DISTRITO" },
+          ],
+          "JPA-S": [
+            { sigla: "APL", nome: "ALTIPLANO" },
+            { sigla: "MGB", nome: "MANGABEIRA" },
+            { sigla: "CDE", nome: "CONDE" },
+            { sigla: "PRT", nome: "PARATIBE" },
+          ],
+          MMG: [
+            { sigla: "MAA", nome: "MATARACA" },
+            { sigla: "JCU", nome: "JACARAÚ" },
+            { sigla: "RTT", nome: "RIO TINTO" },
+          ],
+          SPE: [{ sigla: "SPE", nome: "SAPE" }],
+          STR: [
+            { sigla: "STR", nome: "SANTA RITA" },
+            { sigla: "LCN", nome: "LUCENA" },
+            { sigla: "BYX", nome: "BAYEUX" },
+          ],
+        },
+        Centro: {
+          ARR: [
+            { sigla: "ARR", nome: "AROEIRA" },
+            { sigla: "RIC", nome: "RIACHÃO" },
+            { sigla: "BQR", nome: "BOQUEIRÃO" },
+            { sigla: "SUB", nome: "SURUBIM" },
+          ],
+          JZR: [
+            { sigla: "JZR", nome: "JUAZEIRINHO" },
+            { sigla: "SJC", nome: "SÃO JOÃO DO CARIRI" },
+            { sigla: "SME", nome: "SUMÉ" },
+            { sigla: "MNT", nome: "MONTEIRO" },
+          ],
+          ESP: [
+            { sigla: "ESP", nome: "ESPERANÇA" },
+            { sigla: "POC", nome: "POCINHOS" },
+            { sigla: "ARA", nome: "AREIA" },
+            { sigla: "SLD", nome: "SOLEDADE" },
+          ],
+          PCI: [
+            { sigla: "PCI", nome: "PICUÍ" },
+            { sigla: "ARN", nome: "ARARUNA" },
+            { sigla: "PLV", nome: "PEDRA LAVRADA" },
+            { sigla: "CTE", nome: "CUITÉ" },
+          ],
+          GBA: [
+            { sigla: "GBA", nome: "GUARABIRA" },
+            { sigla: "BNR", nome: "BANANEIRAS" },
+            { sigla: "PLS", nome: "PILÕES" },
+            { sigla: "DIN", nome: "DONA INÊS" },
+          ],
+
+          EBO: [
+            { sigla: "BBR", nome: "BORBOREMA" },
+            { sigla: "BVT", nome: "BELA VISTA" },
+            { sigla: "ABR", nome: "ALTO BRANCO" },
+            { sigla: "CGU", nome: "CAMPINA GRANDE I" },
+
+            { sigla: "BVA", nome: "BOA VISTA" },
+            { sigla: "QMD", nome: "QUEIMADAS" },
+            { sigla: "AER", nome: "AEROCLUBE" },
+            { sigla: "CGD", nome: "CAMPINA GRANDE II" },
+            { sigla: "CTL", nome: "CATOLÉ" },
+          ],
+        },
+        Oeste: {
+          PRI: [
+            { sigla: "PRI", nome: "PRINCESA" },
+            { sigla: "CTR", nome: "CATOLE DO ROCHA" },
+            { sigla: "MLT", nome: "MALTA" },
+            { sigla: "PBL", nome: "POMBAL" },
+            { sigla: "TAB", nome: "TABIRA" },
+          ],
+          CJZ: [
+            { sigla: "CJZ", nome: "CAJAZEIRAS" },
+            { sigla: "SPX", nome: "SÃO JOÃO DO RIO DO PEIXE" },
+            { sigla: "BTF", nome: "BONITO SANTA FÉ" },
+            { sigla: "URN", nome: "UIRAUNA" },
+          ],
+          ITO: [
+            { sigla: "ITO", nome: "ITAPORANGA" },
+            { sigla: "PCO", nome: "PIANCÓ" },
+            { sigla: "CRM", nome: "COREMAS" },
+            { sigla: "IBR", nome: "IBIARA" },
+            { sigla: "SGL", nome: "SÃO GONÇALO" },
+          ],
+          SZA: [
+            { sigla: "SZA", nome: "SOUSA" },
+            { sigla: "BJC", nome: "BREJO DO CRUZ" },
+            { sigla: "JRC", nome: "JERICO" },
+            { sigla: "PLT", nome: "PAULISTA" },
+            { sigla: "SBT", nome: "SÃO BENTO" },
+          ],
+          PTS: [
+            { sigla: "PTS", nome: "PATOS" },
+            { sigla: "SLZ", nome: "SANTA LUZIA" },
+            { sigla: "JTB", nome: "JATOBÁ" },
+            { sigla: "TXR", nome: "TEXEIRA" },
+          ],
+        },
+      };
+
+      // Linhas por SED - conforme especificado
+      const linhasPorSED = {
+        // Leste
+        CAA: ["L1", "L2", "L3", "L4", "L5", "L6"],
+        MRO: ["L1", "L2", "L3", "L4", "L5", "L6"],
+        ITA: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8"],
+        ORT: ["L1", "L2", "L3", "L4", "L5", "L6"],
+        CPX: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8"],
+        JPS: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9"],
+        ILB: ["L1", "L2", "L3", "L4", "L5"],
+        TBU: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8"],
+        BSA: ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        CBD: ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        CRI: ["L1", "L2", "L3", "L4", "L5", "L6"],
+        MRU: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9"],
+        DST: ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        APL: ["L1", "L2", "L3", "L4"],
+        CDE: ["L1", "L2", "L3", "L4", "L5", "L6"],
+        MGB: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8"],
+        PRT: ["L1", "L2", "L3", "L4", "L5", "L6"],
+        MAA: ["L1", "L2", "L3", "L4", "L5", "L6"],
+        RTT: ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        JCU: ["L1", "L2", "L3", "L4", "L5"],
+        SPE: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "C1"],
+        STR: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9", "C1", "C2"],
+        LCN: ["L1", "L2", "L3", "L4"],
+        BYX: ["L1", "L2", "L3", "L4", "L5"],
+
+        // Centro
+        BQR: ["L1", "L2", "L3", "L4"],
+        RIC: ["L1", "L2", "L3", "L4", "L5"],
+        ARR: ["L1", "L2", "L4"],
+        SUB: ["C5"],
+        SJC: ["L1", "L2", "L3", "L4"],
+        JZR: ["L1", "L2", "L3", "L4", "L5", "L6"],
+        MNT: ["L1", "L2", "L3", "L4", "L5", "L6"],
+        SME: ["L1", "L2", "L3", "L4"],
+        SLD: ["L1", "L2", "L3"],
+        POC: ["L1", "L2", "L3"],
+        ESP: ["L1", "L2", "L3", "L4", "L5"],
+        ARA: ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        PLV: ["L1", "L2", "L3", "L4"],
+        ARN: ["L1", "L2", "L3", "L4"],
+        CTE: ["L1", "L2", "L3", "L4"],
+        PCI: ["L1", "L2", "L3"],
+        DIN: ["L1", "L2", "L3", "L4"],
+        BNR: ["L1", "L2", "L3", "L4", "L5", "L6"], // Bananeiras
+        GBA: ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        PLS: ["L1", "L2", "L3", "L4", "L5", "L6"],
+
+        // Oeste
+        PBL: ["L1", "L2", "L3", "L4", "L5", "L6"],
+        CTR: ["L1", "L2", "L3", "L4", "L5"],
+        PRI: ["L1", "L2", "L3", "L4", "L5"],
+        MLT: ["L2", "L3", "L4", "L5"],
+        TAB: ["X6"],
+        BTF: ["L1", "L2", "L3", "P4"],
+        CJZ: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8"],
+        URN: ["L1", "L2", "L3"],
+        SPX: ["L1", "L2", "L3", "L4"],
+        CRM: ["L1", "L2", "L3"],
+        IBR: ["L1", "L2", "L3", "L4", "L5"],
+        SGL: ["L1", "L2", "L3", "L4"],
+        PCO: ["L1", "L2", "L3", "L4", "L5"],
+        ITO: ["L1", "L2", "L3", "L4", "L5"],
+        SZA: ["L1", "L2", "L3", "L4", "L5", "L6", "L7"],
+        BJC: ["L1", "L2", "L3", "L4", "L5"],
+        JRC: ["L1", "L2", "L3"],
+        PLT: ["L1", "L2", "L3", "L4"],
+        SBT: ["L2", "L3", "L4", "L5"],
+        SLZ: ["L1", "L2", "L3", "L4"],
+        JTB: ["L1", "L2", "L3", "L4", "L5"],
+        TXR: ["L2", "L3", "L4"],
+        PTS: ["L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8"],
+
+        // EBO
+        BBR: ["S3", "S4", "S5", "S6", "S7"],
+        ABR: ["V1", "V2", "V3", "V4", "V5", "V6"],
+        BVT: ["M1", "M2", "M3", "M4", "M5"],
+        CGU: ["L1", "L2", "L3", "L4", "L7", "L8", "L9"],
+        BVA: ["L1", "L2", "L3"],
+        QMD: ["Z1", "Z2", "Z3", "Z4"],
+        AER: ["Q1", "Q2", "Q3"],
+        CGD: ["Y1", "Y2", "Y3", "Y4", "Y5", "Y6"],
+        CTL: ["C1", "C2", "C3", "C4", "C6"],
+      };
+
+      // Variável global para armazenar os dados do último desarme
+      let ultimoDesarme = null;
+      let tipoMensagemAtual = "distribuicao"; // 'distribuicao' ou 'transmissao'
+
+      // ==================== FUNÇÕES PRINCIPAIS ====================
+
+      // FUNÇÃO: Atualizar linhas disponíveis baseado na SED selecionada
+      function atualizarLinhasParaSED(sufixo) {
+        const sedSelect = document.getElementById(`sed${sufixo}`);
+        const linhaSelectRL = document.getElementById(`selectLinha${sufixo}`);
+        const linhaSelectRD = document.getElementById(`selectLinhaRD${sufixo}`);
+
+        const sedSigla = sedSelect.value;
+
+        // Limpa as opções atuais
+        if (linhaSelectRL) {
+          linhaSelectRL.innerHTML =
+            '<option value="">Selecione a linha</option>';
+        }
+
+        if (linhaSelectRD) {
+          linhaSelectRD.innerHTML =
+            '<option value="">Selecione a linha</option>';
+        }
+
+        // Se não houver SED selecionada, retorna
+        if (!sedSigla) {
+          return;
+        }
+
+        // Obtém as linhas para esta SED
+        const linhas = linhasPorSED[sedSigla];
+
+        // Se não encontrar linhas específicas, usa as padrão
+        const linhasParaExibir = linhas || [
+          "L1",
+          "L2",
+          "L3",
+          "L4",
+          "L5",
+          "L6",
+          "L7",
+          "L8",
+          "L9",
+          "C1",
+          "C2",
+        ];
+
+        // Adiciona as opções de linha
+        linhasParaExibir.forEach((linha) => {
+          if (linhaSelectRL) {
+            const optionRL = document.createElement("option");
+            optionRL.value = linha;
+            optionRL.textContent = linha;
+            linhaSelectRL.appendChild(optionRL);
+          }
+
+          if (linhaSelectRD) {
+            const optionRD = document.createElement("option");
+            optionRD.value = linha;
+            optionRD.textContent = linha;
+            linhaSelectRD.appendChild(optionRD);
+          }
+        });
+
+        // Atualiza o equipamento após mudar as linhas
+        atualizarEquipamento(sufixo);
+      }
+
+      // FUNÇÃO GENÉRICA: Alterar entre RL e RD
+      function alterarTipoEquipamento(sufixo) {
+        const radioButtons = document.querySelectorAll(
+          `input[name="tipoEquip${sufixo}"]`
+        );
+        let tipo = "RL";
+
+        // Encontra o radio button selecionado
+        for (const radio of radioButtons) {
+          if (radio.checked) {
+            tipo = radio.value;
+            break;
+          }
+        }
+
+        if (tipo === "RL") {
+          document
+            .getElementById(`campoRL${sufixo}`)
+            .classList.remove("hidden");
+          document.getElementById(`campoRD${sufixo}`).classList.add("hidden");
+          // Sincroniza a seleção da linha entre os dois selects
+          const linhaRL = document.getElementById(`selectLinha${sufixo}`).value;
+          const linhaRDSelect = document.getElementById(
+            `selectLinhaRD${sufixo}`
+          );
+          if (linhaRDSelect) {
+            linhaRDSelect.value = linhaRL;
+          }
+        } else {
+          document.getElementById(`campoRL${sufixo}`).classList.add("hidden");
+          document
+            .getElementById(`campoRD${sufixo}`)
+            .classList.remove("hidden");
+          // Sincroniza a seleção da linha entre os dois selects
+          const linhaRD = document.getElementById(
+            `selectLinhaRD${sufixo}`
+          ).value;
+          const linhaRLSelect = document.getElementById(`selectLinha${sufixo}`);
+          if (linhaRLSelect) {
+            linhaRLSelect.value = linhaRD;
+          }
+          if (document.getElementById(`numEquipRD${sufixo}`)) {
+            document.getElementById(`numEquipRD${sufixo}`).focus();
+          }
+        }
+
+        atualizarEquipamento(sufixo);
+      }
+
+      // FUNÇÃO GENÉRICA: Sincronizar seleção de linha entre RL e RD
+      function sincronizarLinha(sufixo) {
+        const radioButtons = document.querySelectorAll(
+          `input[name="tipoEquip${sufixo}"]`
+        );
+        let tipo = "RL";
+
+        // Encontra o radio button selecionado
+        for (const radio of radioButtons) {
+          if (radio.checked) {
+            tipo = radio.value;
+            break;
+          }
+        }
+
+        const linhaRL = document.getElementById(`selectLinha${sufixo}`).value;
+        const linhaRD = document.getElementById(`selectLinhaRD${sufixo}`).value;
+
+        if (tipo === "RL" && linhaRL) {
+          document.getElementById(`selectLinhaRD${sufixo}`).value = linhaRL;
+        } else if (tipo === "RD" && linhaRD) {
+          document.getElementById(`selectLinha${sufixo}`).value = linhaRD;
+        }
+
+        atualizarEquipamento(sufixo);
+      }
+
+      // FUNÇÃO GENÉRICA: Atualizar o campo de equipamento baseado na seleção
+      function atualizarEquipamento(sufixo) {
+        const radioButtons = document.querySelectorAll(
+          `input[name="tipoEquip${sufixo}"]`
+        );
+        let tipo = "RL";
+
+        // Encontra o radio button selecionado
+        for (const radio of radioButtons) {
+          if (radio.checked) {
+            tipo = radio.value;
+            break;
+          }
+        }
+
+        const sed = document.getElementById(`sed${sufixo}`).value;
+        const equip = document.getElementById(`equip${sufixo}`);
+
+        // Pega as 3 primeiras letras da SED
+        const sedSigla = sed ? sed.substring(0, 3) : "";
+
+        if (tipo === "RL") {
+          const linha = document.getElementById(`selectLinha${sufixo}`).value;
+
+          if (linha && sedSigla) {
+            equip.value = `21${linha}-${sedSigla}`;
+          } else {
+            equip.value = "";
+          }
+        } else if (tipo === "RD") {
+          const numero = document
+            .getElementById(`numEquipRD${sufixo}`)
+            .value.trim();
+          const linha = document.getElementById(`selectLinhaRD${sufixo}`).value;
+
+          if (numero && linha && sedSigla) {
+            equip.value = `${numero} no 01${linha}-${sedSigla}`;
+          } else {
+            equip.value = "";
+          }
+        }
+      }
+
+      // Função para mostrar/ocultar campo "Atuou corretamente" baseado na seleção do Self Healing
+      function toggleAtuouCorretamente(tipo) {
+        const self = document.getElementById(`selfHealing${tipo}`).value;
+        const campo = document.getElementById(`campoAtuouCorretamente${tipo}`);
+        if (campo) {
+          campo.style.display = self === "SIM" ? "block" : "none";
+          // Se estiver escondido, limpar o valor
+          if (self !== "SIM") {
+            document.getElementById(`correto${tipo}`).value = "";
+          }
+        }
+      }
+
+      // Função para carregar polos baseado na regional selecionada (Distribuição)
+      function carregarPolos(tipo) {
+        const regionalSelect = document.getElementById(`regional${tipo}`);
+        const poloSelect = document.getElementById(`polo${tipo}`);
+        const sedSelect = document.getElementById(`sed${tipo}`);
+
+        const regional = regionalSelect.value;
+
+        // Limpa os selects de polo e SED
+        poloSelect.innerHTML = '<option value="">Selecione</option>';
+        sedSelect.innerHTML = '<option value="">Selecione</option>';
+
+        if (regional && hierarquia[regional]) {
+          // Adiciona os polos da regional selecionada
+          Object.keys(hierarquia[regional]).forEach((polo) => {
+            const option = document.createElement("option");
+            option.value = polo;
+            option.textContent = polo;
+            poloSelect.appendChild(option);
+          });
+        }
+
+        // Limpa as linhas disponíveis
+        atualizarLinhasParaSED(tipo);
+      }
+
+      // Função para carregar SEDs baseado no polo selecionado (Distribuição)
+      function carregarSEDs(tipo) {
+        const regionalSelect = document.getElementById(`regional${tipo}`);
+        const poloSelect = document.getElementById(`polo${tipo}`);
+        const sedSelect = document.getElementById(`sed${tipo}`);
+
+        const regional = regionalSelect.value;
+        const polo = poloSelect.value;
+
+        // Limpa o select de SED
+        sedSelect.innerHTML = '<option value="">Selecione</option>';
+
+        if (
+          regional &&
+          polo &&
+          hierarquia[regional] &&
+          hierarquia[regional][polo]
+        ) {
+          // Adiciona as SEDs do polo selecionado
+          hierarquia[regional][polo].forEach((sed) => {
+            const option = document.createElement("option");
+            option.value = sed.sigla;
+            option.textContent = `${sed.sigla} - ${sed.nome}`;
+            option.setAttribute("data-nome", sed.nome);
+            sedSelect.appendChild(option);
+          });
+        }
+
+        // Limpa as linhas disponíveis
+        atualizarLinhasParaSED(tipo);
+      }
+
+      // Função para obter o nome completo da SED selecionada
+      function obterNomeSED(sedSelect) {
+        const selectedOption = sedSelect.options[sedSelect.selectedIndex];
+        if (selectedOption && selectedOption.value) {
+          return (
+            selectedOption.getAttribute("data-nome") || selectedOption.value
+          );
+        }
+        return "";
+      }
+
+      // Função para formatar a SED na saída (sigla + nome entre parênteses)
+      function formatarSED(sedSelect) {
+        const sigla = sedSelect.value;
+        const nome = obterNomeSED(sedSelect);
+        if (sigla && nome) {
+          return `${sigla} (${nome})`;
+        }
+        return sigla || "";
+      }
+
+      // Função para selecionar entre Distribuição e Transmissão
+      function selecionarTipoMensagem(tipo) {
+        tipoMensagemAtual = tipo;
+
+        // Atualiza os botões de seleção
+        document.querySelectorAll(".tab-button").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+
+        // Ativa o botão correto
+        const activeButton = document.querySelector(`[data-tipo="${tipo}"]`);
+        if (activeButton) {
+          activeButton.classList.add("active");
+        }
+
+        // Mostra/oculta as seções
+        document
+          .getElementById("sec-distribuicao")
+          .classList.toggle("hidden", tipo !== "distribuicao");
+        document
+          .getElementById("sec-transmissao")
+          .classList.toggle("hidden", tipo !== "transmissao");
+
+        // Limpa a saída
+        document.getElementById("saida").textContent = "";
+      }
+
+      // Função para obter as fases selecionadas
+      function obterFasesSelecionadas() {
+        const fases = [];
+        if (document.getElementById("faseA")?.checked) fases.push("A");
+        if (document.getElementById("faseB")?.checked) fases.push("B");
+        if (document.getElementById("faseC")?.checked) fases.push("C");
+        if (document.getElementById("faseN")?.checked) fases.push("N");
+        return fases.join(""); // Retorna as fases concatenadas (ex.: "ABC", "BN", etc.)
+      }
+
+      // Função para obter as fases selecionadas na falta de fase
+      function obterFasesSelecionadasFaltaFase() {
+        const fases = [];
+        if (document.getElementById("faseAFaltaFase")?.checked) fases.push("A");
+        if (document.getElementById("faseBFaltaFase")?.checked) fases.push("B");
+        if (document.getElementById("faseCFaltaFase")?.checked) fases.push("C");
+        if (document.getElementById("faseNFaltaFase")?.checked) fases.push("N");
+        return fases.join("");
+      }
+
+      // Função para obter as fases selecionadas na transmissão
+      function obterFasesSelecionadasTransmissao() {
+        const fases = [];
+        if (document.getElementById("faseATransmissao")?.checked)
+          fases.push("A");
+        if (document.getElementById("faseBTransmissao")?.checked)
+          fases.push("B");
+        if (document.getElementById("faseCTransmissao")?.checked)
+          fases.push("C");
+        if (document.getElementById("faseNTransmissao")?.checked)
+          fases.push("N");
+        return fases.join("");
+      }
+
+      // Função para obter as fases selecionadas no desarme de linha
+      function obterFasesSelecionadasDesarmeLinha() {
+        const fases = [];
+        if (document.getElementById("faseADesarmeLinha")?.checked)
+          fases.push("A");
+        if (document.getElementById("faseBDesarmeLinha")?.checked)
+          fases.push("B");
+        if (document.getElementById("faseCDesarmeLinha")?.checked)
+          fases.push("C");
+        if (document.getElementById("faseNDesarmeLinha")?.checked)
+          fases.push("N");
+        return fases.join("");
+      }
+
+      // Função para obter as fases selecionadas no religamento
+      function obterFasesSelecionadasReligamento() {
+        const fases = [];
+        if (document.getElementById("faseAReligamento")?.checked)
+          fases.push("A");
+        if (document.getElementById("faseBReligamento")?.checked)
+          fases.push("B");
+        if (document.getElementById("faseCReligamento")?.checked)
+          fases.push("C");
+        if (document.getElementById("faseNReligamento")?.checked)
+          fases.push("N");
+        return fases.join("");
+      }
+
+      // Função para obter as fases selecionadas no RA C/ SUCESSO
+      function obterFasesSelecionadasRaSucesso() {
+        const fases = [];
+        if (document.getElementById("faseARaSucesso")?.checked) fases.push("A");
+        if (document.getElementById("faseBRaSucesso")?.checked) fases.push("B");
+        if (document.getElementById("faseCRaSucesso")?.checked) fases.push("C");
+        if (document.getElementById("faseNRaSucesso")?.checked) fases.push("N");
+        return fases.join("");
+      }
+
+      // Função para armazenar os dados do desarme atual
+      function armazenarDadosDesarme() {
+        const regional = document.getElementById("regionalDesarme").value;
+        const polo = document.getElementById("poloDesarme").value;
+        const sed = document.getElementById("sedDesarme").value;
+        const equip = document.getElementById("equipDesarme").value.trim();
+
+        if (regional && polo && sed && equip) {
+          ultimoDesarme = {
+            regional: regional,
+            polo: polo,
+            sed: sed,
+            equip: equip,
+          };
+        }
+      }
+
+      // Função para usar os dados do último desarme
+      function usarDadosDesarme(tipo) {
+        if (!ultimoDesarme) {
+          alert(
+            "Nenhum desarme foi registrado ainda. Gere primeiro um desarme."
+          );
+          return;
+        }
+
+        if (tipo === "parcial") {
+          document.getElementById("regionalParcial").value =
+            ultimoDesarme.regional;
+          // Dispara o evento para carregar os polos
+          carregarPolos("Parcial");
+          // Aguarda um pouco para garantir que os polos foram carregados antes de selecionar
+          setTimeout(() => {
+            document.getElementById("poloParcial").value = ultimoDesarme.polo;
+            // Dispara o evento para carregar as SEDs
+            carregarSEDs("Parcial");
+            setTimeout(() => {
+              document.getElementById("sedParcial").value = ultimoDesarme.sed;
+              document.getElementById("equipParcial").value =
+                ultimoDesarme.equip;
+              // Atualiza as linhas para a SED selecionada
+              atualizarLinhasParaSED("Parcial");
+            }, 100);
+          }, 100);
+        } else if (tipo === "total") {
+          document.getElementById("regionalTotal").value =
+            ultimoDesarme.regional;
+          // Dispara o evento para carregar os polos
+          carregarPolos("Total");
+          // Aguarda um pouco para garantir que os polos foram carregados antes de selecionar
+          setTimeout(() => {
+            document.getElementById("poloTotal").value = ultimoDesarme.polo;
+            // Dispara o evento para carregar as SEDs
+            carregarSEDs("Total");
+            setTimeout(() => {
+              document.getElementById("sedTotal").value = ultimoDesarme.sed;
+              document.getElementById("equipTotal").value = ultimoDesarme.equip;
+              // Atualiza as linhas para a SED selecionada
+              atualizarLinhasParaSED("Total");
+            }, 100);
+          }, 100);
+        }
+
+        // Mostra uma mensagem de confirmação
+        alert(
+          `Dados do último desarme aplicados: ${ultimoDesarme.regional}, ${ultimoDesarme.polo}, ${ultimoDesarme.sed}, ${ultimoDesarme.equip}`
+        );
+      }
+
+      // ==================== UTILIDADES DE FORMATAÇÃO ====================
+      function formatarDataNumerica(v) {
+        // Converte de YYYY-MM-DD para DD/MM/YYYY
+        if (!v) return "";
+        const [yyyy, mm, dd] = v.split("-");
+        if (!dd || !mm || !yyyy) return "";
+        return `${dd}/${mm}/${yyyy}`;
+      }
+
+      function formatarHoraNumerica(v) {
+        // Aceita 6 dígitos: HHMMSS. Se 3-5 dígitos, preenche à esquerda.
+        let only = String(v || "").replace(/\D/g, "");
+        if (only.length < 6) only = only.padStart(6, "0"); // ex.: 93512 -> 093512
+        if (only.length !== 6) return "";
+        const hh = Number(only.slice(0, 2));
+        const mm = Number(only.slice(2, 4));
+        const ss = Number(only.slice(4, 6));
+        if (hh > 23 || mm > 59 || ss > 59) return "";
+        return `${String(hh).padStart(2, "0")}:${String(mm).padStart(
+          2,
+          "0"
+        )}:${String(ss).padStart(2, "0")}`;
+      }
+
+      // Função para formatação em tempo real da hora
+      function formatarHoraInput(input) {
+        const valor = input.value.replace(/\D/g, "");
+        if (valor.length <= 6) {
+          let formatado = valor;
+          if (valor.length > 4) {
+            formatado =
+              valor.slice(0, 2) +
+              ":" +
+              valor.slice(2, 4) +
+              ":" +
+              valor.slice(4, 6);
+          } else if (valor.length > 2) {
+            formatado = valor.slice(0, 2) + ":" + valor.slice(2, 4);
+          }
+          input.value = formatado;
+        }
+      }
+
+      function sufixoA(num) {
+        const only = String(num || "").trim();
+        if (!only) return "";
+        const n = Number(only.replace(",", "."));
+        if (isNaN(n)) return "";
+        return `${n} A`;
+      }
+
+      function mostrar(id, show) {
+        const el = document.getElementById(id);
+        if (el) {
+          el.classList.toggle("hidden", !show);
+        }
+      }
+
+      // ==================== FUNÇÕES DE AÇÃO ====================
+
+      // Função para compartilhar o texto
+      function compartilhar() {
+        const texto = document.getElementById("saida").textContent;
+
+        if (!texto.trim()) {
+          alert("Nada para compartilhar. Gere o texto primeiro.");
+          return;
+        }
+
+        // Codifica o texto para URL
+        const textoCodificado = encodeURIComponent(texto);
+
+        // Link padrão do WhatsApp (funciona em mobile e desktop)
+        const urlWhatsApp = `https://wa.me/?text=${textoCodificado}`;
+
+        // Abre o WhatsApp em nova aba
+        window.open(urlWhatsApp, "_blank");
+      }
+
+      // Função para copiar texto
+      function copiar() {
+        const txt = document.getElementById("saida").textContent;
+        if (!txt.trim()) {
+          alert("Nada para copiar. Gere o texto primeiro.");
+          return;
+        }
+
+        // Método compatível com Teams
+        const textarea = document.createElement("textarea");
+        textarea.value = txt;
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+          const success = document.execCommand("copy");
+          if (success) {
+            alert("Texto copiado para a área de transferência!");
+          } else {
+            // Fallback para navegadores modernos
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard
+                .writeText(txt)
+                .then(() =>
+                  alert("Texto copiado para a área de transferência!")
+                )
+                .catch(() => alert("Não foi possível copiar o texto."));
+            } else {
+              alert(
+                "Não foi possível copiar o texto. Selecione e copie manualmente."
+              );
+            }
+          }
+        } catch (err) {
+          console.error("Erro ao copiar:", err);
+          alert("Erro ao copiar texto. Tente selecionar e copiar manualmente.");
+        } finally {
+          document.body.removeChild(textarea);
+        }
+      }
+
+      // Funções para Distribuição
+      function onTipoChange() {
+        const tipo = document.getElementById("tipo").value;
+        mostrar("sec-desarme", tipo === "desarme");
+        mostrar("sec-falta_fase", tipo === "falta_fase");
+        mostrar("sec-parcial", tipo === "parcial");
+        mostrar("sec-total", tipo === "total");
+        mostrar("sec-ra_sucesso", tipo === "ra_sucesso");
+        document.getElementById("saida").textContent = "";
+        [
+          "errDesarme",
+          "errFaltaFase",
+          "errParcial",
+          "errTotal",
+          "errRaSucesso",
+        ].forEach((id) => mostrar(id, false));
+      }
+
+      function validarDesarme() {
+        const erros = [];
+        const tipoAt = document.getElementById("tipoAtuacaoDesarme").value;
+        const regional = document.getElementById("regionalDesarme").value;
+        const polo = document.getElementById("poloDesarme").value;
+        const sed = document.getElementById("sedDesarme").value;
+        const equip = document.getElementById("equipDesarme").value.trim();
+        const data = formatarDataNumerica(
+          document.getElementById("dataDesarme").value
+        );
+        const hora = formatarHoraNumerica(
+          document.getElementById("horaDesarme").value
+        );
+        const afet = document.getElementById("afetadosDesarme").value.trim();
+        const prot = document.getElementById("protecaoDesarme").value;
+        const nivel = sufixoA(document.getElementById("nivelCCDesarme").value);
+        const self = document.getElementById("selfHealingDesarme").value;
+        const correto = document.getElementById("corretoDesarme").value;
+        const fases = obterFasesSelecionadas();
+
+        if (!tipoAt) erros.push("Selecione ACC/AMC.");
+        if (!regional) erros.push("Selecione a regional.");
+        if (!polo) erros.push("Selecione o polo.");
+        if (!sed) erros.push("Selecione a SED.");
+        if (!equip) erros.push("Preencha o equipamento.");
+        if (!data) erros.push("Selecione a data.");
+        if (!hora) erros.push("Hora inválida (use HHMMSS).");
+        if (!afet) erros.push('Preencha "Clientes afetados".');
+        if (!prot) erros.push('Selecione "Proteção atuada".');
+        if (!nivel) erros.push('Informe "Nível CC" numérico.');
+        if (!self) erros.push("Selecione se possui Self Healing.");
+        // Só valida "Atuou corretamente" se Self Healing for "SIM"
+        if (self === "SIM" && !correto)
+          erros.push("Selecione se atuou corretamente.");
+
+        return { erros, data, hora, nivel, tipoAt, fases, self, correto };
+      }
+
+      function validarFaltaFase() {
+        const erros = [];
+        const tipoAt = document.getElementById("tipoAtuacaoFaltaFase").value;
+        const regional = document.getElementById("regionalFaltaFase").value;
+        const polo = document.getElementById("poloFaltaFase").value;
+        const sed = document.getElementById("sedFaltaFase").value;
+        const equip = document.getElementById("equipFaltaFase").value.trim();
+        const data = formatarDataNumerica(
+          document.getElementById("dataFaltaFase").value
+        );
+        const hora = formatarHoraNumerica(
+          document.getElementById("horaFaltaFase").value
+        );
+        const afet = document.getElementById("afetadosFaltaFase").value.trim();
+        const fases = obterFasesSelecionadasFaltaFase();
+
+        if (!tipoAt) erros.push("Selecione ACC/AMC.");
+        if (!regional) erros.push("Selecione a regional.");
+        if (!polo) erros.push("Selecione o polo.");
+        if (!sed) erros.push("Selecione a SED.");
+        if (!equip) erros.push("Preencha o equipamento.");
+        if (!data) erros.push("Selecione a data.");
+        if (!hora) erros.push("Hora inválida (use HHMMSS).");
+        if (!afet) erros.push('Preencha "POSSIVEIS CLIENTES AFETADOS".');
+
+        return { erros, data, hora, tipoAt, fases };
+      }
+
+      function validarParcial() {
+        const erros = [];
+        const regional = document.getElementById("regionalParcial").value;
+        const polo = document.getElementById("poloParcial").value;
+        const sed = document.getElementById("sedParcial").value;
+        const equip = document.getElementById("equipParcial").value.trim();
+        const data = formatarDataNumerica(
+          document.getElementById("dataParcial").value
+        );
+        const hora = formatarHoraNumerica(
+          document.getElementById("horaParcial").value
+        );
+        const norm = document.getElementById("normParcial").value.trim();
+        const desen = document.getElementById("desenParcial").value.trim();
+
+        if (!regional) erros.push("Selecione a regional.");
+        if (!polo) erros.push("Selecione o polo.");
+        if (!sed) erros.push("Selecione a SED.");
+        if (!equip) erros.push("Preencha o equipamento.");
+        if (!data) erros.push("Selecione a data.");
+        if (!hora) erros.push("Hora inválida (use HHMMSS).");
+        if (!norm) erros.push('Preencha "Clientes normalizados".');
+        if (!desen) erros.push('Preencha "Clientes ainda desenergizados".');
+
+        return { erros, data, hora };
+      }
+
+      function validarTotal() {
+        const erros = [];
+        const regional = document.getElementById("regionalTotal").value;
+        const polo = document.getElementById("poloTotal").value;
+        const sed = document.getElementById("sedTotal").value;
+        const equip = document.getElementById("equipTotal").value.trim();
+        const data = formatarDataNumerica(
+          document.getElementById("dataTotal").value
+        );
+        const hora = formatarHoraNumerica(
+          document.getElementById("horaTotal").value
+        );
+        const rest = document.getElementById("restTotal").value.trim();
+        const causa = document.getElementById("causaTotal").value.trim();
+
+        if (!regional) erros.push("Selecione a regional.");
+        if (!polo) erros.push("Selecione o polo.");
+        if (!sed) erros.push("Selecione a SED.");
+        if (!equip) erros.push("Preencha o equipamento.");
+        if (!data) erros.push("Selecione a data.");
+        if (!hora) erros.push("Hora inválida (use HHMMSS).");
+        if (!rest) erros.push('Preencha "Clientes restabelecidos".');
+        if (!causa) erros.push("Preencha a causa.");
+
+        return { erros, data, hora };
+      }
+
+      // Função para validar RA C/ SUCESSO
+      function validarRaSucesso() {
+        const erros = [];
+        const regional = document.getElementById("regionalRaSucesso").value;
+        const polo = document.getElementById("poloRaSucesso").value;
+        const sed = document.getElementById("sedRaSucesso").value;
+        const equip = document.getElementById("equipRaSucesso").value.trim();
+        const data = formatarDataNumerica(
+          document.getElementById("dataRaSucesso").value
+        );
+        const hora = formatarHoraNumerica(
+          document.getElementById("horaRaSucesso").value
+        );
+        const prot = document.getElementById("protecaoRaSucesso").value;
+        const nivel = sufixoA(
+          document.getElementById("nivelCCRaSucesso").value
+        );
+        const compNIX = document
+          .getElementById("compNIXRaSucesso")
+          .value.trim();
+        const acao = document.getElementById("acaoRaSucesso").value.trim();
+
+        if (!regional) erros.push("Selecione a regional.");
+        if (!polo) erros.push("Selecione o polo.");
+        if (!sed) erros.push("Selecione a SED.");
+        if (!equip) erros.push("Preencha o equipamento.");
+        if (!data) erros.push("Selecione a data.");
+        if (!hora) erros.push("Hora inválida (use HHMMSS).");
+        if (!prot) erros.push('Selecione "Proteção atuada".');
+        if (!nivel) erros.push('Informe "Nível CC" numérico.');
+        if (!compNIX) erros.push('Preencha "Comp. referência NIX".');
+        if (!acao) erros.push('Preencha "Ação".');
+
+        const fases = obterFasesSelecionadasRaSucesso();
+        return { erros, data, hora, nivel, prot, fases, compNIX, acao };
+      }
+
+      // Funções para Transmissão
+      function onTipoTransmissaoChange() {
+        const tipo = document.getElementById("tipoTransmissao").value;
+        mostrar("sec-desarme-transmissao", tipo === "desarme");
+        mostrar("sec-desarme-linha", tipo === "desarme_linha");
+        mostrar("sec-religamento", tipo === "religamento");
+        mostrar("sec-energizacao-total", tipo === "energizacao_total");
+        mostrar("sec-vtcd", tipo === "vtcd");
+        document.getElementById("saida").textContent = "";
+        [
+          "errDesarmeTransmissao",
+          "errDesarmeLinha",
+          "errReligamento",
+          "errEnergizacaoTotal",
+          "errVTCD",
+        ].forEach((id) => mostrar(id, false));
+      }
+
+      function validarDesarmeTransmissao() {
+        const erros = [];
+        const regional = document.getElementById(
+          "regionalDesarmeTransmissao"
+        ).value;
+        const sed = document
+          .getElementById("sedDesarmeTransmissao")
+          .value.trim();
+        const disjuntor = document
+          .getElementById("disjuntorDesarmeTransmissao")
+          .value.trim();
+        const tipoAt = document.getElementById(
+          "tipoAtuacaoDesarmeTransmissao"
+        ).value;
+        const data = formatarDataNumerica(
+          document.getElementById("dataDesarmeTransmissao").value
+        );
+        const hora = formatarHoraNumerica(
+          document.getElementById("horaDesarmeTransmissao").value
+        );
+        const afet = document
+          .getElementById("afetadosDesarmeTransmissao")
+          .value.trim();
+        const prot = document.getElementById(
+          "protecaoDesarmeTransmissao"
+        ).value;
+        const nivel = sufixoA(
+          document.getElementById("nivelCCDesarmeTransmissao").value
+        );
+        const fases = obterFasesSelecionadasTransmissao();
+        const km = document.getElementById("kmDesarmeTransmissao").value.trim();
+
+        if (!regional) erros.push("Selecione a regional.");
+        if (!sed) erros.push("Preencha a SED.");
+        if (!disjuntor) erros.push("Preencha o disjuntor.");
+        if (!tipoAt) erros.push("Selecione ACC/AMC.");
+        if (!data) erros.push("Selecione a data.");
+        if (!hora) erros.push("Hora inválida (use HHMMSS).");
+        if (!afet) erros.push('Preencha "Clientes afetados".');
+        if (!prot) erros.push('Selecione "Proteção atuada".');
+        if (!nivel) erros.push('Informe "Nível CC" numérico.');
+        if (!km) erros.push("Preencha o KM.");
+
+        return { erros, data, hora, nivel, tipoAt, fases };
+      }
+
+      function validarDesarmeLinha() {
+        const erros = [];
+        const regional = document.getElementById("regionalDesarmeLinha").value;
+        const sed = document.getElementById("sedDesarmeLinha").value.trim();
+        const disjuntor = document
+          .getElementById("disjuntorDesarmeLinha")
+          .value.trim();
+        const linha = document.getElementById("linhaDesarmeLinha").value.trim();
+        const tipoAt = document.getElementById("tipoAtuacaoDesarmeLinha").value;
+        const data = formatarDataNumerica(
+          document.getElementById("dataDesarmeLinha").value
+        );
+        const hora = formatarHoraNumerica(
+          document.getElementById("horaDesarmeLinha").value
+        );
+        const afet = document
+          .getElementById("afetadosDesarmeLinha")
+          .value.trim();
+        const prot = document.getElementById("protecaoDesarmeLinha").value;
+        const nivel = sufixoA(
+          document.getElementById("nivelCCDesarmeLinha").value
+        );
+        const fases = obterFasesSelecionadasDesarmeLinha();
+        const km = document.getElementById("kmDesarmeLinha").value.trim();
+
+        if (!regional) erros.push("Selecione a regional.");
+        if (!sed) erros.push("Preencha a SED.");
+        if (!disjuntor) erros.push("Preencha o disjuntor.");
+        if (!linha) erros.push("Preencha a linha de transmissão.");
+        if (!tipoAt) erros.push("Selecione ACC/AMC.");
+        if (!data) erros.push("Selecione a data.");
+        if (!hora) erros.push("Hora inválida (use HHMMSS).");
+        if (!afet) erros.push('Preencha "Clientes afetados".');
+        if (!prot) erros.push('Selecione "Proteção atuada".');
+        if (!nivel) erros.push('Informe "Nível CC" numérico.');
+        if (!km) erros.push("Preencha o KM.");
+
+        return { erros, data, hora, nivel, tipoAt, fases };
+      }
+
+      function validarReligamento() {
+        const erros = [];
+        const regional = document.getElementById("regionalReligamento").value;
+        const sed = document.getElementById("sedReligamento").value.trim();
+        const disjuntor = document
+          .getElementById("disjuntorReligamento")
+          .value.trim();
+        const linha = document.getElementById("linhaReligamento").value.trim();
+        const data = formatarDataNumerica(
+          document.getElementById("dataReligamento").value
+        );
+        const hora = formatarHoraNumerica(
+          document.getElementById("horaReligamento").value
+        );
+        const prot = document.getElementById("protecaoReligamento").value;
+        const nivel = sufixoA(
+          document.getElementById("nivelCCReligamento").value
+        );
+        const fases = obterFasesSelecionadasReligamento();
+        const km = document.getElementById("kmReligamento").value.trim();
+
+        if (!regional) erros.push("Selecione a regional.");
+        if (!sed) erros.push("Preencha a SED.");
+        if (!disjuntor) erros.push("Preencha o disjuntor.");
+        if (!linha) erros.push("Preencha a linha de transmissão.");
+        if (!data) erros.push("Selecione a data.");
+        if (!hora) erros.push("Hora inválida (use HHMMSS).");
+        if (!prot) erros.push('Selecione "Proteção atuada".');
+        if (!nivel) erros.push('Informe "Nível CC" numérico.');
+        if (!km) erros.push("Preencha o KM.");
+
+        return { erros, data, hora, nivel, fases };
+      }
+
+      function validarEnergizacaoTotal() {
+        const erros = [];
+        const regional = document.getElementById(
+          "regionalEnergizacaoTotal"
+        ).value;
+        const sed = document.getElementById("sedEnergizacaoTotal").value.trim();
+        const disjuntor = document
+          .getElementById("disjuntorEnergizacaoTotal")
+          .value.trim();
+        const linha = document
+          .getElementById("linhaEnergizacaoTotal")
+          .value.trim();
+        const data = formatarDataNumerica(
+          document.getElementById("dataEnergizacaoTotal").value
+        );
+        const hora = formatarHoraNumerica(
+          document.getElementById("horaEnergizacaoTotal").value
+        );
+        const restabelecidos = document
+          .getElementById("restabelecidosEnergizacaoTotal")
+          .value.trim();
+        const causa = document
+          .getElementById("causaEnergizacaoTotal")
+          .value.trim();
+
+        if (!regional) erros.push("Selecione a regional.");
+        if (!sed) erros.push("Preencha a SED.");
+        if (!disjuntor) erros.push("Preencha o disjuntor.");
+        if (!linha) erros.push("Preencha a linha de transmissão.");
+        if (!data) erros.push("Selecione a data.");
+        if (!hora) erros.push("Hora inválida (use HHMMSS).");
+        if (!restabelecidos) erros.push('Preencha "Clientes restabelecidos".');
+        if (!causa) erros.push("Preencha a causa.");
+
+        return { erros, data, hora };
+      }
+
+      function validarVTCD() {
+        const erros = [];
+        const regional = document.getElementById("regionalVTCD").value;
+        const sed = document.getElementById("sedVTCD").value.trim();
+        const linha = document.getElementById("linhaVTCD").value.trim();
+        const data = formatarDataNumerica(
+          document.getElementById("dataVTCD").value
+        );
+        const hora = formatarHoraNumerica(
+          document.getElementById("horaVTCD").value
+        );
+
+        if (!regional) erros.push("Selecione a regional.");
+        if (!sed) erros.push("Preencha a SED.");
+        if (!linha) erros.push("Preencha a linha.");
+        if (!data) erros.push("Selecione a data.");
+        if (!hora) erros.push("Hora inválida (use HHMMSS).");
+
+        return { erros, data, hora };
+      }
+
+      function aplicarVisual(texto) {
+        // Remove espaços extras no início de cada linha
+        texto = texto
+          .split("\n")
+          .map((l) => l.trimStart())
+          .join("\n")
+          .trim();
+
+        let visual;
+        if (tipoMensagemAtual === "distribuicao") {
+          visual = document.getElementById("visual").value;
+        } else {
+          visual = document.getElementById("visualTransmissao").value;
+        }
+
+        if (visual === "marcadores") {
+          return texto
+            .split("\n")
+            .map((l) => (l ? `• ${l}` : l))
+            .join("\n");
+        }
+
+        return texto;
+      }
+
+      function gerarTexto() {
+        let saida = "";
+
+        if (tipoMensagemAtual === "distribuicao") {
+          const tipo = document.getElementById("tipo").value;
+          if (!tipo) {
+            alert("Selecione o tipo de informação.");
+            return;
+          }
+
+          // Limpa erros
+          [
+            "errDesarme",
+            "errFaltaFase",
+            "errParcial",
+            "errTotal",
+            "errRaSucesso",
+          ].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) {
+              el.textContent = "";
+              mostrar(id, false);
+            }
+          });
+
+          if (tipo === "desarme") {
+            const v = validarDesarme();
+            if (false && v.erros.length) {
+              const el = document.getElementById("errDesarme");
+              el.textContent = "Verifique: " + v.erros.join(" | ");
+              mostrar("errDesarme", false);
+              return;
+            }
+            const tipoAt = document.getElementById("tipoAtuacaoDesarme").value;
+            const regional = document.getElementById("regionalDesarme").value;
+            const sed = formatarSED(document.getElementById("sedDesarme"));
+            const equip = document.getElementById("equipDesarme").value.trim();
+            const afet = document
+              .getElementById("afetadosDesarme")
+              .value.trim();
+            const prot = document.getElementById("protecaoDesarme").value;
+            const nivel = v.nivel;
+            const self = v.self;
+            const correto = v.correto;
+            const obs = document.getElementById("obsDesarme").value.trim();
+
+            // Formata a proteção atuada com as fases selecionadas
+            const protecaoComFases = `${prot} ${v.fases}`;
+
+            // Armazena os dados do desarme para reutilização
+            armazenarDadosDesarme();
+
+            saida = `*${tipoAt} NA DISTRIBUIÇÃO*
+      Regional: ${regional}
+      *SED: ${sed}*
+      *Equipamento: ${equip}*
+      Data: ${v.data}
+      Hora de atuação: ${v.hora}
+      *Clientes afetados: ${afet}*
+      Proteção atuada: ${protecaoComFases}
+      Nível CC: ${nivel}
+      Possui Self Healing: ${self}`;
+
+            // Só adiciona "Atuou corretamente" se Self Healing for "SIM"
+            if (self === "SIM") {
+              saida += `
+      Atuou corretamente: ${correto}`;
+            }
+
+            saida += `
+      *OBS: ${obs || "-"}*
+      `;
+          } else if (tipo === "falta_fase") {
+            const v = validarFaltaFase();
+            if (false && v.erros.length) {
+              const el = document.getElementById("errFaltaFase");
+              el.textContent = "Verifique: " + v.erros.join(" | ");
+              mostrar("errFaltaFase", false);
+              return;
+            }
+            const tipoAt = document.getElementById(
+              "tipoAtuacaoFaltaFase"
+            ).value;
+            const regional = document.getElementById("regionalFaltaFase").value;
+            const sed = formatarSED(document.getElementById("sedFaltaFase"));
+            const equip = document
+              .getElementById("equipFaltaFase")
+              .value.trim();
+            const afet = document
+              .getElementById("afetadosFaltaFase")
+              .value.trim();
+            const obs = document.getElementById("obsFaltaFase").value.trim();
+
+            saida = `*FALTA DE FASE NA DISTRIBUIÇÃO*
+      ${tipoAt}
+      Regional: ${regional}
+      *SED: ${sed}*
+      *Equipamento: ${equip}*
+      Data: ${v.data}
+      Hora FALTA DE FASE: ${v.hora}
+      *POSSIVEIS CLIENTES AFETADOS: ${afet}*
+      *FASES AFETADAS: ${v.fases}*
+      *OBS: ${obs || "-"}*
+      `;
+          } else if (tipo === "parcial") {
+            const v = validarParcial();
+            if (false && v.erros.length) {
+              const el = document.getElementById("errParcial");
+              el.textContent = "Verifique: " + v.erros.join(" | ");
+              mostrar("errParcial", false);
+              return;
+            }
+            const regional = document.getElementById("regionalParcial").value;
+            const sed = formatarSED(document.getElementById("sedParcial"));
+            const equip = document.getElementById("equipParcial").value.trim();
+            const norm = document.getElementById("normParcial").value.trim();
+            const desen = document.getElementById("desenParcial").value.trim();
+            const obs = document.getElementById("obsParcial").value.trim();
+
+            saida = `*NORMALIZAÇÃO PARCIAL*
+      Regional: ${regional}
+      *SED: ${sed}*
+      *Equipamento: ${equip}*
+      Data: ${v.data}
+      Hora de normalização: ${v.hora}
+      *Clientes normalizados: ${norm}*
+      *Clientes ainda desenergizados: ${desen}*
+      *OBS: ${obs || "-"}*
+      `;
+          } else if (tipo === "total") {
+            const v = validarTotal();
+            if (false && v.erros.length) {
+              const el = document.getElementById("errTotal");
+              el.textContent = "Verifique: " + v.erros.join(" | ");
+              mostrar("errTotal", false);
+              return;
+            }
+            const regional = document.getElementById("regionalTotal").value;
+            const sed = formatarSED(document.getElementById("sedTotal"));
+            const equip = document.getElementById("equipTotal").value.trim();
+            const rest = document.getElementById("restTotal").value.trim();
+            const causa = document.getElementById("causaTotal").value.trim();
+            const idDefeito = document
+              .getElementById("idDefeitoTotal")
+              .value.trim();
+            const obs = document.getElementById("obsTotal").value.trim();
+
+            saida = `*NORMALIZAÇÃO TOTAL*
+      Regional: ${regional}
+      *SED: ${sed}*
+      *Equipamento: ${equip}*
+      Data: ${v.data}
+      Horário de normalização: ${v.hora}
+      *Clientes restabelecidos: ${rest}*
+      Causa: ${causa}`;
+
+            // Adiciona ID do defeito apenas se preenchido
+            if (idDefeito) {
+              saida += `
+      ID do defeito: ${idDefeito}`;
+            }
+
+            saida += `
+      *OBS: ${obs || "-"}*
+      `;
+          } else if (tipo === "ra_sucesso") {
+            const v = validarRaSucesso();
+            if (false && v.erros.length) {
+              const el = document.getElementById("errRaSucesso");
+              el.textContent = "Verifique: " + v.erros.join(" | ");
+              mostrar("errRaSucesso", false);
+              return;
+            }
+            const regional = document.getElementById("regionalRaSucesso").value;
+            const sed = formatarSED(document.getElementById("sedRaSucesso"));
+            const equip = document
+              .getElementById("equipRaSucesso")
+              .value.trim();
+            const compNIX = document
+              .getElementById("compNIXRaSucesso")
+              .value.trim();
+            const acao = document.getElementById("acaoRaSucesso").value.trim();
+
+            // Formata a proteção atuada com as fases selecionadas
+            const protecaoComFases = `${v.prot} ${v.fases}`;
+
+            saida = `*INFORMATIVO RA C/ SUCESSO*
+      Regional: ${regional}
+      *SED: ${sed}*
+      *Equipamento: ${equip}*
+      Data: ${v.data}
+      Hora de atuação: ${v.hora}
+      Proteção atuada: ${protecaoComFases}
+      Nível CC: ${v.nivel}
+      Comp. referência NIX: ${compNIX}
+      *Ações tomadas: ${acao}*
+      `;
+          }
+        } else {
+          // Transmissão
+          const tipo = document.getElementById("tipoTransmissao").value;
+          if (!tipo) {
+            alert("Selecione o tipo de informação.");
+            return;
+          }
+
+          // Limpa erros
+          [
+            "errDesarmeTransmissao",
+            "errDesarmeLinha",
+            "errReligamento",
+            "errEnergizacaoTotal",
+            "errVTCD",
+          ].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) {
+              el.textContent = "";
+              mostrar(id, false);
+            }
+          });
+
+          if (tipo === "desarme") {
+            const v = validarDesarmeTransmissao();
+            if (false && v.erros.length) {
+              const el = document.getElementById("errDesarmeTransmissao");
+              el.textContent = "Verifique: " + v.erros.join(" | ");
+              mostrar("errDesarmeTransmissao", false);
+              return;
+            }
+            const regional = document.getElementById(
+              "regionalDesarmeTransmissao"
+            ).value;
+            const sed = document
+              .getElementById("sedDesarmeTransmissao")
+              .value.trim();
+            const disjuntor = document
+              .getElementById("disjuntorDesarmeTransmissao")
+              .value.trim();
+            const afet = document
+              .getElementById("afetadosDesarmeTransmissao")
+              .value.trim();
+            const prot = document.getElementById(
+              "protecaoDesarmeTransmissao"
+            ).value;
+            const nivel = v.nivel;
+            const km = document
+              .getElementById("kmDesarmeTransmissao")
+              .value.trim();
+            const obs = document
+              .getElementById("obsDesarmeTransmissao")
+              .value.trim();
+
+            // Formata a proteção atuada com as fases selecionadas
+            const protecaoComFases = `${prot} ${v.fases}`;
+
+            saida = `*DESARME NA TRANSMISSÃO*
+      REGIONAL: ${regional}
+      *SED: ${sed}*
+      *DISJUNTOR: ${disjuntor}*
+      DATA: ${v.data}
+      HORA DE ATUAÇÃO: ${v.hora}
+      *CLIENTES AFETADOS: ${afet}*
+      PROTEÇÃO ATUADA: ${protecaoComFases}
+      NIVEL CC: ${nivel}
+      KM: ${km}
+      *OBS: ${obs || "-"}*
+      `;
+          } else if (tipo === "desarme_linha") {
+            const v = validarDesarmeLinha();
+            if (false && v.erros.length) {
+              const el = document.getElementById("errDesarmeLinha");
+              el.textContent = "Verifique: " + v.erros.join(" | ");
+              mostrar("errDesarmeLinha", false);
+              return;
+            }
+            const regional = document.getElementById(
+              "regionalDesarmeLinha"
+            ).value;
+            const sed = document.getElementById("sedDesarmeLinha").value.trim();
+            const disjuntor = document
+              .getElementById("disjuntorDesarmeLinha")
+              .value.trim();
+            const linha = document
+              .getElementById("linhaDesarmeLinha")
+              .value.trim();
+            const afet = document
+              .getElementById("afetadosDesarmeLinha")
+              .value.trim();
+            const prot = document.getElementById("protecaoDesarmeLinha").value;
+            const nivel = v.nivel;
+            const km = document.getElementById("kmDesarmeLinha").value.trim();
+            const obs = document.getElementById("obsDesarmeLinha").value.trim();
+
+            // Formata a proteção atuada com as fases selecionadas
+            const protecaoComFases = `${prot} ${v.fases}`;
+
+            saida = `*PARA DESARME DE LINHA*
+      REGIONAL: ${regional}
+      *SED: ${sed}*
+      *DISJUNTOR: ${disjuntor}*
+      *LINHA DE TRANSMISSÃO: ${linha}*
+      DATA: ${v.data}
+      HORA DE ATUAÇÃO: ${v.hora}
+      *CLIENTES AFETADOS: ${afet}*
+      PROTEÇÃO ATUADA: ${protecaoComFases}
+      NIVEL CC: ${nivel}
+      KM: ${km}
+      *OBS: ${obs || "-"}*
+      `;
+          } else if (tipo === "religamento") {
+            const v = validarReligamento();
+            if (false && v.erros.length) {
+              const el = document.getElementById("errReligamento");
+              el.textContent = "Verifique: " + v.erros.join(" | ");
+              mostrar("errReligamento", false);
+              return;
+            }
+            const regional = document.getElementById(
+              "regionalReligamento"
+            ).value;
+            const sed = document.getElementById("sedReligamento").value.trim();
+            const disjuntor = document
+              .getElementById("disjuntorReligamento")
+              .value.trim();
+            const linha = document
+              .getElementById("linhaReligamento")
+              .value.trim();
+            const prot = document.getElementById("protecaoReligamento").value;
+            const nivel = v.nivel;
+            const km = document.getElementById("kmReligamento").value.trim();
+            const obs = document.getElementById("obsReligamento").value.trim();
+
+            // Formata a proteção atuada com as fases selecionadas
+            const protecaoComFases = `${prot} ${v.fases}`;
+
+            saida = `*RELIGAMENTO AUTOMÁTICO COM SUCESSO*
+      REGIONAL: ${regional}
+      *SED: ${sed}*
+      *DISJUNTOR: ${disjuntor}*
+      *LINHA DE TRANSMISSÃO: ${linha}*
+      DATA: ${v.data}
+      HORA DE ATUAÇÃO: ${v.hora}
+      CLIENTES AFETADOS: NENHUM
+      PROTEÇÃO ATUADA: ${protecaoComFases}
+      NIVEL CC: ${nivel}
+      KM: ${km}
+      *OBS: ${obs || "-"}*
+      `;
+          } else if (tipo === "energizacao_total") {
+            const v = validarEnergizacaoTotal();
+            if (false && v.erros.length) {
+              const el = document.getElementById("errEnergizacaoTotal");
+              el.textContent = "Verifique: " + v.erros.join(" | ");
+              mostrar("errEnergizacaoTotal", false);
+              return;
+            }
+            const regional = document.getElementById(
+              "regionalEnergizacaoTotal"
+            ).value;
+            const sed = document
+              .getElementById("sedEnergizacaoTotal")
+              .value.trim();
+            const disjuntor = document
+              .getElementById("disjuntorEnergizacaoTotal")
+              .value.trim();
+            const linha = document
+              .getElementById("linhaEnergizacaoTotal")
+              .value.trim();
+            const restabelecidos = document
+              .getElementById("restabelecidosEnergizacaoTotal")
+              .value.trim();
+            const causa = document
+              .getElementById("causaEnergizacaoTotal")
+              .value.trim();
+            const obs = document
+              .getElementById("obsEnergizacaoTotal")
+              .value.trim();
+
+            saida = `*ENERGIZAÇÃO TOTAL*
+      REGIONAL: ${regional}
+      *SED: ${sed}*
+      *DISJUNTOR: ${disjuntor}*
+      *LINHA DE TRANSMISSÃO: ${linha}*
+      DATA: ${v.data}
+      HORÁRIO DE NORMALIZAÇÃO: ${v.hora}
+      *CLIENTES RESTABELECIDOS: ${restabelecidos}*
+      CAUSA: ${causa}
+      *OBS: ${obs || "-"}*
+      `;
+          } else if (tipo === "vtcd") {
+            const v = validarVTCD();
+            if (false && v.erros.length) {
+              const el = document.getElementById("errVTCD");
+              el.textContent = "Verifique: " + v.erros.join(" | ");
+              mostrar("errVTCD", false);
+              return;
+            }
+            const regional = document.getElementById("regionalVTCD").value;
+            const sed = document.getElementById("sedVTCD").value.trim();
+            const linha = document.getElementById("linhaVTCD").value.trim();
+            const obs = document.getElementById("obsVTCD").value.trim();
+
+            saida = `*VTCD:*
+      REGIONAL: ${regional}
+      *SED: ${sed}*
+      *LINHA: ${linha}*
+      DATA: ${v.data}
+      HORA: ${v.hora}
+      *OBS: ${obs || "-"}*
+      `;
+          }
+        }
+
+        document.getElementById("saida").textContent = aplicarVisual(saida);
+      }
+
+      function limpar() {
+        document.getElementById("saida").textContent = "";
+
+        // Limpa distribuição
+        document.getElementById("tipo").value = "";
+        document.getElementById("visual").value = "padrao";
+        onTipoChange();
+
+        // Limpa transmissão
+        document.getElementById("tipoTransmissao").value = "";
+        document.getElementById("visualTransmissao").value = "padrao";
+        onTipoTransmissaoChange();
+
+        // Limpa todos inputs dos painéis
+        const ids = [
+          // Distribuição
+          "tipoAtuacaoDesarme",
+          "regionalDesarme",
+          "poloDesarme",
+          "sedDesarme",
+          "equipDesarme",
+          "dataDesarme",
+          "horaDesarme",
+          "afetadosDesarme",
+          "protecaoDesarme",
+          "nivelCCDesarme",
+          "selfHealingDesarme",
+          "corretoDesarme",
+          "obsDesarme",
+
+          // Falta de Fase
+          "tipoAtuacaoFaltaFase",
+          "regionalFaltaFase",
+          "poloFaltaFase",
+          "sedFaltaFase",
+          "equipFaltaFase",
+          "dataFaltaFase",
+          "horaFaltaFase",
+          "afetadosFaltaFase",
+          "obsFaltaFase",
+
+          "regionalParcial",
+          "poloParcial",
+          "sedParcial",
+          "equipParcial",
+          "dataParcial",
+          "horaParcial",
+          "normParcial",
+          "desenParcial",
+          "obsParcial",
+          "regionalTotal",
+          "poloTotal",
+          "sedTotal",
+          "equipTotal",
+          "dataTotal",
+          "horaTotal",
+          "restTotal",
+          "causaTotal",
+          "idDefeitoTotal",
+          "obsTotal",
+
+          // RA C/ SUCESSO
+          "regionalRaSucesso",
+          "poloRaSucesso",
+          "sedRaSucesso",
+          "equipRaSucesso",
+          "dataRaSucesso",
+          "horaRaSucesso",
+          "protecaoRaSucesso",
+          "nivelCCRaSucesso",
+          "compNIXRaSucesso",
+          "acaoRaSucesso",
+
+          // Transmissão
+          "regionalDesarmeTransmissao",
+          "sedDesarmeTransmissao",
+          "disjuntorDesarmeTransmissao",
+          "tipoAtuacaoDesarmeTransmissao",
+          "dataDesarmeTransmissao",
+          "horaDesarmeTransmissao",
+          "afetadosDesarmeTransmissao",
+          "protecaoDesarmeTransmissao",
+          "nivelCCDesarmeTransmissao",
+          "kmDesarmeTransmissao",
+          "obsDesarmeTransmissao",
+
+          "regionalDesarmeLinha",
+          "sedDesarmeLinha",
+          "disjuntorDesarmeLinha",
+          "linhaDesarmeLinha",
+          "tipoAtuacaoDesarmeLinha",
+          "dataDesarmeLinha",
+          "horaDesarmeLinha",
+          "afetadosDesarmeLinha",
+          "protecaoDesarmeLinha",
+          "nivelCCDesarmeLinha",
+          "kmDesarmeLinha",
+          "obsDesarmeLinha",
+
+          "regionalReligamento",
+          "sedReligamento",
+          "disjuntorReligamento",
+          "linhaReligamento",
+          "dataReligamento",
+          "horaReligamento",
+          "protecaoReligamento",
+          "nivelCCReligamento",
+          "kmReligamento",
+          "obsReligamento",
+
+          "regionalEnergizacaoTotal",
+          "sedEnergizacaoTotal",
+          "disjuntorEnergizacaoTotal",
+          "linhaEnergizacaoTotal",
+          "dataEnergizacaoTotal",
+          "horaEnergizacaoTotal",
+          "restabelecidosEnergizacaoTotal",
+          "causaEnergizacaoTotal",
+          "obsEnergizacaoTotal",
+
+          "regionalVTCD",
+          "sedVTCD",
+          "linhaVTCD",
+          "dataVTCD",
+          "horaVTCD",
+          "obsVTCD",
+        ];
+
+        ids.forEach((id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          if (el.tagName === "SELECT") {
+            el.value = "";
+          } else if (el.type === "checkbox") {
+            el.checked = false;
+          } else if (el.type === "date") {
+            // Define a data atual como padrão
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, "0");
+            const dd = String(today.getDate()).padStart(2, "0");
+            el.value = `${yyyy}-${mm}-${dd}`;
+          } else {
+            el.value = "";
+          }
+        });
+
+        // Limpa as caixas de seleção de fases
+        document.querySelectorAll('input[type="checkbox"]').forEach((cb) => {
+          cb.checked = false;
+        });
+
+        // Limpa os novos campos RL/RD
+        document
+          .querySelectorAll('input[type="radio"][value="RL"]')
+          .forEach((radio) => {
+            radio.checked = true;
+          });
+
+        // Para cada tipo, altera para mostrar o campo RL
+        ["Desarme", "FaltaFase", "Parcial", "Total", "RaSucesso"].forEach(
+          (tipo) => {
+            alterarTipoEquipamento(tipo);
+
+            // Limpa os selects de linha
+            const linhaSelect = document.getElementById(`selectLinha${tipo}`);
+            const linhaRDSelect = document.getElementById(
+              `selectLinhaRD${tipo}`
+            );
+
+            if (linhaSelect) {
+              linhaSelect.innerHTML =
+                '<option value="">Selecione a linha</option>';
+            }
+
+            if (linhaRDSelect) {
+              linhaRDSelect.innerHTML =
+                '<option value="">Selecione a linha</option>';
+            }
+
+            // Limpa o campo de número do RD
+            const numEquipRD = document.getElementById(`numEquipRD${tipo}`);
+            if (numEquipRD) {
+              numEquipRD.value = "";
+            }
+
+            // Limpa o campo de equipamento
+            const equip = document.getElementById(`equip${tipo}`);
+            if (equip) {
+              equip.value = "";
+            }
+          }
+        );
+
+        // Limpa os dados do último desarme
+        ultimoDesarme = null;
+
+        // Resetar a visibilidade dos campos
+        toggleAtuouCorretamente("Desarme");
+      }
+
+      // ==================== INICIALIZAÇÃO ====================
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Configura o estado inicial
+        selecionarTipoMensagem("distribuicao");
+
+        // Define a data atual como padrão para todos os campos de data
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        const todayStr = `${yyyy}-${mm}-${dd}`;
+
+        document.querySelectorAll('input[type="date"]').forEach((input) => {
+          input.value = todayStr;
+        });
+
+        // Inicializar a visibilidade dos campos "Atuou corretamente"
+        toggleAtuouCorretamente("Desarme");
+
+        // Configurar RL como padrão para todos os tipos
+        ["Desarme", "FaltaFase", "Parcial", "Total", "RaSucesso"].forEach(
+          (tipo) => {
+            alterarTipoEquipamento(tipo);
+          }
+        );
+
+        // ==================== CONFIGURAÇÃO DE EVENT LISTENERS ====================
+
+        // Botões de seleção de tipo de mensagem
+        document.querySelectorAll(".tab-button").forEach((button) => {
+          button.addEventListener("click", function () {
+            const tipo = this.getAttribute("data-tipo");
+            selecionarTipoMensagem(tipo);
+          });
+        });
+
+        // Botões de ação principais
+        document.querySelectorAll("[data-action]").forEach((button) => {
+          button.addEventListener("click", function () {
+            const action = this.getAttribute("data-action");
+
+            switch (action) {
+              case "gerar":
+                gerarTexto();
+                break;
+              case "copiar":
+                copiar();
+                break;
+              case "compartilhar":
+                compartilhar();
+                break;
+              case "limpar":
+                limpar();
+                break;
+              case "usarDesarme":
+                const tipo = this.getAttribute("data-tipo");
+                usarDadosDesarme(tipo);
+                break;
+            }
+          });
+        });
+
+        // Event listeners para selects de distribuição
+        document
+          .getElementById("tipo")
+          .addEventListener("change", onTipoChange);
+
+        // Event listeners para selects de transmissão
+        document
+          .getElementById("tipoTransmissao")
+          .addEventListener("change", onTipoTransmissaoChange);
+
+        // Event listeners para selects de regional (Distribuição)
+        ["Desarme", "FaltaFase", "Parcial", "Total", "RaSucesso"].forEach(
+          (tipo) => {
+            const regionalSelect = document.getElementById(`regional${tipo}`);
+            const poloSelect = document.getElementById(`polo${tipo}`);
+            const sedSelect = document.getElementById(`sed${tipo}`);
+            const linhaSelect = document.getElementById(`selectLinha${tipo}`);
+            const linhaRDSelect = document.getElementById(
+              `selectLinhaRD${tipo}`
+            );
+            const selfHealingSelect = document.getElementById(
+              `selfHealing${tipo}`
+            );
+
+            if (regionalSelect) {
+              regionalSelect.addEventListener("change", () =>
+                carregarPolos(tipo)
+              );
+            }
+
+            if (poloSelect) {
+              poloSelect.addEventListener("change", () => carregarSEDs(tipo));
+            }
+
+            if (sedSelect) {
+              sedSelect.addEventListener("change", () => {
+                atualizarLinhasParaSED(tipo);
+                atualizarEquipamento(tipo);
+              });
+            }
+
+            if (linhaSelect) {
+              linhaSelect.addEventListener("change", () => {
+                sincronizarLinha(tipo);
+                atualizarEquipamento(tipo);
+              });
+            }
+
+            if (linhaRDSelect) {
+              linhaRDSelect.addEventListener("change", () => {
+                sincronizarLinha(tipo);
+                atualizarEquipamento(tipo);
+              });
+            }
+
+            if (selfHealingSelect && tipo === "Desarme") {
+              selfHealingSelect.addEventListener("change", () =>
+                toggleAtuouCorretamente(tipo)
+              );
+            }
+          }
+        );
+
+        // Event listeners para radio buttons de tipo de equipamento
+        ["Desarme", "FaltaFase", "Parcial", "Total", "RaSucesso"].forEach(
+          (tipo) => {
+            const radioButtons = document.querySelectorAll(
+              `input[name="tipoEquip${tipo}"]`
+            );
+            radioButtons.forEach((radio) => {
+              radio.addEventListener("change", () =>
+                alterarTipoEquipamento(tipo)
+              );
+            });
+          }
+        );
+
+        // Event listeners para inputs de hora
+        document
+          .querySelectorAll('input[placeholder*="93512"]')
+          .forEach((input) => {
+            input.addEventListener("input", function () {
+              formatarHoraInput(this);
+            });
+          });
+
+        // Event listeners para inputs de número de equipamento RD
+        ["Desarme", "FaltaFase", "Parcial", "Total", "RaSucesso"].forEach(
+          (tipo) => {
+            const input = document.getElementById(`numEquipRD${tipo}`);
+            if (input) {
+              input.addEventListener("input", () => atualizarEquipamento(tipo));
+            }
+          }
+        );
+
+        console.log("Sistema inicializado com sucesso!");
+      });
+    </script>
+  </body>
+</html>
